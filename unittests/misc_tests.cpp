@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(authority_checker)
 
    auto GetNullAuthority = [](auto){abort(); return authority();};
 
-   auto A = authority(2, {key_weight{a, 1}, key_weight{b, 1}});
+   auto A = authority(2, {key_weight{a.to_addr(), 1}, key_weight{b.to_addr(), 1}});
    {
       auto checker = make_auth_checker(GetNullAuthority, 2, {a, b});
       BOOST_TEST(checker.satisfied(A));
@@ -308,27 +308,27 @@ BOOST_AUTO_TEST_CASE(authority_checker)
       BOOST_TEST(checker.used_keys().size() == 0);
    }
 
-   A = authority(3, {key_weight{a, 1}, key_weight{b, 1}, key_weight{c, 1}});
+   A = authority(3, {key_weight{a.to_addr(), 1}, key_weight{b.to_addr(), 1}, key_weight{c.to_addr(), 1}});
    BOOST_TEST(make_auth_checker(GetNullAuthority, 2, {c, b, a}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetNullAuthority, 2, {a, b}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetNullAuthority, 2, {a, c}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetNullAuthority, 2, {b, c}).satisfied(A));
 
-   A = authority(1, {key_weight{a, 1}, key_weight{b, 1}});
+   A = authority(1, {key_weight{a.to_addr(), 1}, key_weight{b.to_addr(), 1}});
    BOOST_TEST(make_auth_checker(GetNullAuthority, 2, {a}).satisfied(A));
    BOOST_TEST(make_auth_checker(GetNullAuthority, 2, {b}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetNullAuthority, 2, {c}).satisfied(A));
 
-   A = authority(1, {key_weight{a, 2}, key_weight{b, 1}});
+   A = authority(1, {key_weight{a.to_addr(), 2}, key_weight{b.to_addr(), 1}});
    BOOST_TEST(make_auth_checker(GetNullAuthority, 2, {a}).satisfied(A));
    BOOST_TEST(make_auth_checker(GetNullAuthority, 2, {b}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetNullAuthority, 2, {c}).satisfied(A));
 
    auto GetCAuthority = [c](auto){
-      return authority(1, {key_weight{c, 1}});
+      return authority(1, {key_weight{c.to_addr(), 1}});
    };
 
-   A = authority(2, {key_weight{a, 2}, key_weight{b, 1}}, {permission_level_weight{{"hello",  "world"}, 1}});
+   A = authority(2, {key_weight{a.to_addr(), 2}, key_weight{b.to_addr(), 1}}, {permission_level_weight{{"hello",  "world"}, 1}});
    {
       auto checker = make_auth_checker(GetCAuthority, 2, {a});
       BOOST_TEST(checker.satisfied(A));
@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_CASE(authority_checker)
       BOOST_TEST(checker.unused_keys().count(c) == 1);
    }
 
-   A = authority(3, {key_weight{a, 2}, key_weight{b, 1}}, {permission_level_weight{{"hello",  "world"}, 3}});
+   A = authority(3, {key_weight{a.to_addr(), 2}, key_weight{b.to_addr(), 1}}, {permission_level_weight{{"hello",  "world"}, 3}});
    {
       auto checker = make_auth_checker(GetCAuthority, 2, {a, b});
       BOOST_TEST(checker.satisfied(A));
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(authority_checker)
       BOOST_TEST(checker.unused_keys().count(b) == 1);
    }
 
-   A = authority(2, {key_weight{a, 1}, key_weight{b, 1}}, {permission_level_weight{{"hello",  "world"}, 1}});
+   A = authority(2, {key_weight{a.to_addr(), 1}, key_weight{b.to_addr(), 1}}, {permission_level_weight{{"hello",  "world"}, 1}});
    BOOST_TEST(!make_auth_checker(GetCAuthority, 2, {a}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetCAuthority, 2, {b}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetCAuthority, 2, {c}).satisfied(A));
@@ -401,7 +401,7 @@ BOOST_AUTO_TEST_CASE(authority_checker)
       BOOST_TEST(checker.unused_keys().count(c) == 1);
    }
 
-   A = authority(2, {key_weight{a, 1}, key_weight{b, 1}}, {permission_level_weight{{"hello",  "world"}, 2}});
+   A = authority(2, {key_weight{a.to_addr(), 1}, key_weight{b.to_addr(), 1}}, {permission_level_weight{{"hello",  "world"}, 2}});
    BOOST_TEST(make_auth_checker(GetCAuthority, 2, {a, b}).satisfied(A));
    BOOST_TEST(make_auth_checker(GetCAuthority, 2, {c}).satisfied(A));
    BOOST_TEST(!make_auth_checker(GetCAuthority, 2, {a}).satisfied(A));
@@ -420,11 +420,11 @@ BOOST_AUTO_TEST_CASE(authority_checker)
 
    auto GetAuthority = [d, e] (const permission_level& perm) {
       if (perm.actor == "top")
-         return authority(2, {key_weight{d, 1}}, {permission_level_weight{{"bottom",  "bottom"}, 1}});
-      return authority{1, {{e, 1}}, {}};
+         return authority(2, {key_weight{d.to_addr(), 1}}, {permission_level_weight{{"bottom",  "bottom"}, 1}});
+      return authority{1, {{e.to_addr(), 1}}, {}};
    };
 
-   A = authority(5, {key_weight{a, 2}, key_weight{b, 2}, key_weight{c, 2}}, {permission_level_weight{{"top",  "top"}, 5}});
+   A = authority(5, {key_weight{a.to_addr(), 2}, key_weight{b.to_addr(), 2}, key_weight{c.to_addr(), 2}}, {permission_level_weight{{"top",  "top"}, 5}});
    {
       auto checker = make_auth_checker(GetAuthority, 2, {d, e});
       BOOST_TEST(checker.satisfied(A));
@@ -458,17 +458,17 @@ BOOST_AUTO_TEST_CASE(authority_checker)
    BOOST_TEST(a < c);
    {
       // valid key order: b < a < c
-      A = authority(2, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}});
+      A = authority(2, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}});
       // valid key order: b < c
-      auto B = authority(1, {key_weight{b, 1}, key_weight{c, 1}});
+      auto B = authority(1, {key_weight{b.to_addr(), 1}, key_weight{c.to_addr(), 1}});
       // invalid key order: c > b
-      auto C = authority(1, {key_weight{b, 1}, key_weight{c, 1}, key_weight{b, 1}});
+      auto C = authority(1, {key_weight{b.to_addr(), 1}, key_weight{c.to_addr(), 1}, key_weight{b.to_addr(), 1}});
       // invalid key order: duplicate c
-      auto D = authority(1, {key_weight{b, 1}, key_weight{c, 1}, key_weight{c, 1}});
+      auto D = authority(1, {key_weight{b.to_addr(), 1}, key_weight{c.to_addr(), 1}, key_weight{c.to_addr(), 1}});
       // invalid key order: duplicate b
-      auto E = authority(1, {key_weight{b, 1}, key_weight{b, 1}, key_weight{c, 1}});
+      auto E = authority(1, {key_weight{b.to_addr(), 1}, key_weight{b.to_addr(), 1}, key_weight{c.to_addr(), 1}});
       // unvalid: insufficient weight
-      auto F = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}});
+      auto F = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}});
 
       auto checker = make_auth_checker(GetNullAuthority, 2, {a, b, c});
       BOOST_TEST(validate(A));
@@ -490,36 +490,36 @@ BOOST_AUTO_TEST_CASE(authority_checker)
       BOOST_TEST(checker.unused_keys().count(c) == 1);
    }
    {
-      auto A2 = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto A2 = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                           { permission_level_weight{{"a",  "world"},     1},
                             permission_level_weight{{"hello",  "world"}, 1},
                             permission_level_weight{{"hi",  "world"},    1}
                           });
-      auto B2 = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto B2 = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                           {permission_level_weight{{"hello",  "world"}, 1}
                           });
-      auto C2 = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto C2 = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                           { permission_level_weight{{"hello",  "there"}, 1},
                             permission_level_weight{{"hello",  "world"}, 1}
                           });
       // invalid: duplicate
-      auto D2 = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto D2 = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                           { permission_level_weight{{"hello",  "world"}, 1},
                             permission_level_weight{{"hello",  "world"}, 2}
                           });
       // invalid: wrong order
-      auto E2 = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto E2 = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                           { permission_level_weight{{"hello",  "world"}, 2},
                             permission_level_weight{{"hello",  "there"}, 1}
                           });
       // invalid: wrong order
-      auto F2 = authority(4, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto F2 = authority(4, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                           { permission_level_weight{{"hi",  "world"}, 2},
                             permission_level_weight{{"hello",  "world"}, 1}
                           });
 
       // invalid: insufficient weight
-      auto G2 = authority(7, {key_weight{b, 1}, key_weight{a, 1}, key_weight{c, 1}},
+      auto G2 = authority(7, {key_weight{b.to_addr(), 1}, key_weight{a.to_addr(), 1}, key_weight{c.to_addr(), 1}},
                              { permission_level_weight{{"a",  "world"},     1},
                                permission_level_weight{{"hello",  "world"}, 1},
                                permission_level_weight{{"hi",  "world"},    1}

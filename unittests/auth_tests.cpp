@@ -122,7 +122,7 @@ try {
       BOOST_TEST(auth.threshold == 1);
       BOOST_TEST(auth.keys.size() == 1);
       BOOST_TEST(auth.accounts.size() == 0);
-      BOOST_TEST(auth.keys[0].key == new_owner_pub_key);
+      BOOST_TEST(auth.keys[0].key == new_owner_pub_key.to_addr());
       BOOST_TEST(auth.keys[0].weight == 1);
    }
 
@@ -143,7 +143,7 @@ try {
       BOOST_TEST(auth.threshold == 1);
       BOOST_TEST(auth.keys.size() == 1);
       BOOST_TEST(auth.accounts.size() == 0);
-      BOOST_TEST(auth.keys[0].key == new_active_pub_key);
+      BOOST_TEST(auth.keys[0].key == new_active_pub_key.to_addr());
       BOOST_TEST(auth.keys[0].weight == 1);
    }
 
@@ -446,7 +446,7 @@ try {
       signed_transaction trx;
       chain.set_transaction_headers(trx);
 
-      authority invalid_auth = authority(threshold, {key_weight{chain.get_public_key( a, "owner" ), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
+      authority invalid_auth = authority(threshold, {key_weight{chain.get_public_key( a, "owner" ).to_addr(), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
 
       vector<permission_level> pls;
       pls.push_back({creator, "active"});

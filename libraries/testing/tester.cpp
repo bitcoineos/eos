@@ -233,7 +233,7 @@ namespace eosio { namespace testing {
       authority owner_auth;
       if( multisig ) {
          // multisig between account's owner key and creators active permission
-         owner_auth = authority(2, {key_weight{get_public_key( a, "owner" ), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
+         owner_auth = authority(2, {key_weight{get_public_key( a, "owner" ).to_addr(), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
       } else {
          owner_auth =  authority( get_public_key( a, "owner" ) );
       }

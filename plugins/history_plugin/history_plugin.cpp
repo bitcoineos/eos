@@ -99,16 +99,16 @@ namespace eosio {
       }
    }
 
-   static void add(chainbase::database& db, const vector<key_weight>& keys, const account_name& name, const permission_name& permission)
-   {
-      for (auto pub_key_weight : keys ) {
-         db.create<public_key_history_object>([&](public_key_history_object& obj) {
-            obj.public_key = pub_key_weight.key;
-            obj.name = name;
-            obj.permission = permission;
-         });
-      }
-   }
+//    static void add(chainbase::database& db, const vector<key_weight>& keys, const account_name& name, const permission_name& permission)
+//    {
+//       for (auto pub_key_weight : keys ) {
+//          db.create<public_key_history_object>([&](public_key_history_object& obj) {
+//             obj.public_key = pub_key_weight.key;
+//             obj.name = name;
+//             obj.permission = permission;
+//          });
+//       }
+//    }
 
    static void add(chainbase::database& db, const vector<permission_level_weight>& controlling_accounts, const account_name& account_name, const permission_name& permission)
    {
@@ -192,9 +192,9 @@ namespace eosio {
             if( at.act.name == N(newaccount) )
             {
                const auto create = at.act.data_as<chain::newaccount>();
-               add(db, create.owner.keys, create.name, N(owner));
+            //    add(db, create.owner.keys, create.name, N(owner));
                add(db, create.owner.accounts, create.name, N(owner));
-               add(db, create.active.keys, create.name, N(active));
+            //    add(db, create.active.keys, create.name, N(active));
                add(db, create.active.accounts, create.name, N(active));
             }
             else if( at.act.name == N(updateauth) )
@@ -202,7 +202,7 @@ namespace eosio {
                const auto update = at.act.data_as<chain::updateauth>();
                remove<public_key_history_multi_index, by_account_permission>(db, update.account, update.permission);
                remove<account_control_history_multi_index, by_controlled_authority>(db, update.account, update.permission);
-               add(db, update.auth.keys, update.account, update.permission);
+            //    add(db, update.auth.keys, update.account, update.permission);
                add(db, update.auth.accounts, update.account, update.permission);
             }
             else if( at.act.name == N(deleteauth) )

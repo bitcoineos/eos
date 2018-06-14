@@ -210,7 +210,7 @@ struct dice_tester : TESTER {
       auto auth = authority{
          1,
          {
-            {.key = get_public_key(account,"active"), .weight = 1}
+            {.key = get_public_key(account,"active").to_addr(), .weight = 1}
          },
          {
             {.permission = {N(dice),N(active)}, .weight = 1}

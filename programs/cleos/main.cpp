@@ -408,7 +408,7 @@ void send_transaction( signed_transaction& trx, int32_t extra_kcpu, packed_trans
    }
 }
 
-chain::action create_newaccount(const name& creator, const name& newaccount, public_key_type owner, public_key_type active) {
+chain::action create_newaccount(const name& creator, const name& newaccount, std::string owner, std::string active) {
    return action {
       tx_permission.empty() ? vector<chain::permission_level>{{creator,config::active_name}} : get_account_permissions(tx_permission),
       eosio::chain::newaccount{
@@ -839,13 +839,13 @@ struct create_account_subcommand {
       createAccount->set_callback([this] {
             if( !active_key_str.size() )
                active_key_str = owner_key_str;
-            public_key_type owner_key, active_key;
-            try {
-               owner_key = public_key_type(owner_key_str);
-            } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid owner public key: ${public_key}", ("public_key", owner_key_str));
-            try {
-               active_key = public_key_type(active_key_str);
-            } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid active public key: ${public_key}", ("public_key", active_key_str));
+            std::string owner_key, active_key;
+            // try {
+            //    owner_key = public_key_type(owner_key_str);
+            // } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid owner public key: ${public_key}", ("public_key", owner_key_str));
+            // try {
+            //    active_key = public_key_type(active_key_str);
+            // } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid active public key: ${public_key}", ("public_key", active_key_str));
             auto create = create_newaccount(creator, account_name, owner_key, active_key);
             if (!simple) {
                if ( buy_ram_eos.empty() && buy_ram_bytes_in_kbytes == 0) {
@@ -1624,7 +1624,7 @@ int main( int argc, char** argv ) {
          auto privs = string(pk);
          auto pubs  = string(pk.get_public_key());
          std::cout << localized("Private key: ${key}", ("key",  privs) ) << std::endl;
-         std::cout << localized("Public key: ${key}", ("key", pubs ) ) << std::endl;
+std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().to_addr() ) ) << std::endl;
       }
    });
    create_key->add_flag( "--r1", r1, "Generate a key using the R1 curve (iPhone), instead of the K1 curve (Bitcoin)"  );
@@ -2213,7 +2213,7 @@ int main( int argc, char** argv ) {
 
       fc::variants vs = {fc::variant(wallet_name), fc::variant(wallet_key)};
       call(wallet_url, wallet_import_key, vs);
-      std::cout << localized("imported private key for: ${pubkey}", ("pubkey", std::string(pubkey))) << std::endl;
+      std::cout << localized("imported private key for: ${pubkey}", ("pubkey", std::string(pubkey) + " (" + pubkey.to_addr() + ")")) << std::endl;
    });
 
    // create a key within wallet

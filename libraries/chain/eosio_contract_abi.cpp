@@ -103,7 +103,7 @@ abi_def eosio_contract_abi(const abi_def& eosio_system_abi)
    // authority
    eos_abi.structs.emplace_back( struct_def {
       "key_weight", "", {
-         {"key", "public_key"},
+         {"key", "string"},
          {"weight", "weight_type"}
       }
    });

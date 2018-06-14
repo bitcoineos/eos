@@ -22,7 +22,7 @@ struct permission_level_weight {
 };
 
 struct key_weight {
-   public_key_type key;
+   std::string key;
    weight_type     weight;
 
    friend bool operator == ( const key_weight& lhs, const key_weight& rhs ) {
@@ -58,6 +58,14 @@ namespace config {
 
 struct authority {
    authority( public_key_type k, uint32_t delay_sec = 0 )
+   :threshold(1),keys({{k.to_addr(),1}})
+   {
+      if( delay_sec > 0 ) {
+         threshold = 2;
+         waits.push_back(wait_weight{delay_sec, 1});
+      }
+   }
+   authority( std::string k, uint32_t delay_sec = 0 )
    :threshold(1),keys({{k,1}})
    {
       if( delay_sec > 0 ) {
@@ -65,7 +73,6 @@ struct authority {
          waits.push_back(wait_weight{delay_sec, 1});
       }
    }
-
    authority( uint32_t t, vector<key_weight> k, vector<permission_level_weight> p = {}, vector<wait_weight> w = {} )
    :threshold(t),keys(move(k)),accounts(move(p)),waits(move(w)){}
    authority(){}

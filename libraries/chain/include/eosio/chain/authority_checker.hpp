@@ -226,9 +226,13 @@ namespace detail {
             }
 
             uint32_t operator()(const key_weight& permission) {
-               auto itr = boost::find( checker.provided_keys, permission.key );
-               if( itr != checker.provided_keys.end() ) {
-                  checker._used_keys[itr - checker.provided_keys.begin()] = true;
+               std::vector<std::string> provided_addrs;
+               for(std::vector<public_key_type>::iterator it = checker.provided_keys.begin() ; it != checker.provided_keys.end(); ++it) {
+                 provided_addrs.push_back(it->to_addr());
+               }
+               auto itr = boost::find( provided_addrs, permission.key );
+               if( itr != provided_addrs.end() ) {
+                  checker._used_keys[itr - provided_addrs.begin()] = true;
                   total_weight += permission.weight;
                }
                return total_weight;

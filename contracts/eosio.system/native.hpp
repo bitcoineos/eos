@@ -28,7 +28,7 @@ namespace eosiosystem {
    };
 
    struct key_weight {
-      public_key   key;
+      std::string   key;
       weight_type  weight;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time

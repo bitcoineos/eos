@@ -60,9 +60,9 @@ public:
       authority owner_auth;
       if (multisig) {
          // multisig between account's owner key and creators active permission
-         owner_auth = authority(2, {key_weight{get_public_key( a, "owner" ), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
+         owner_auth = authority(2, {key_weight{get_public_key( a, "owner" ).to_addr(), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
       } else {
-         owner_auth =  authority( get_public_key( a, "owner" ) );
+         owner_auth =  authority( get_public_key( a, "owner" ).to_addr() );
       }
 
       trx.actions.emplace_back( vector<permission_level>{{creator,config::active_name}},
@@ -407,7 +407,7 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, eosio_msig_tester )
    // alice active     bob active   carol active
 
    set_authority(N(eosio), "active", authority(1,
-      vector<key_weight>{{get_private_key("eosio", "active").get_public_key(), 1}},
+      vector<key_weight>{{get_private_key("eosio", "active").get_public_key().to_addr(), 1}},
       vector<permission_level_weight>{{{N(eosio.prods), config::active_name}, 1}}), "owner",
       { { N(eosio), "active" } }, { get_private_key( N(eosio), "active" ) });
 
@@ -518,7 +518,7 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, eosio_msig_tester
 
    // set up the link between (eosio active) and (eosio.prods active)
    set_authority(N(eosio), "active", authority(1,
-      vector<key_weight>{{get_private_key("eosio", "active").get_public_key(), 1}},
+      vector<key_weight>{{get_private_key("eosio", "active").get_public_key().to_addr(), 1}},
       vector<permission_level_weight>{{{N(eosio.prods), config::active_name}, 1}}), "owner",
       { { N(eosio), "active" } }, { get_private_key( N(eosio), "active" ) });
 

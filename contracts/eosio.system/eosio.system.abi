@@ -28,7 +28,7 @@
       "name": "key_weight",
       "base": "",
       "fields": [
-        {"name":"key",    "type":"public_key"},
+        {"name":"key",    "type":"string"},
         {"name":"weight", "type":"weight_type"}
       ]
     },{

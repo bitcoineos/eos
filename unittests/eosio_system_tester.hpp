@@ -136,7 +136,7 @@ public:
       authority owner_auth;
       if (multisig) {
          // multisig between account's owner key and creators active permission
-         owner_auth = authority(2, {key_weight{get_public_key( a, "owner" ), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
+         owner_auth = authority(2, {key_weight{get_public_key( a, "owner" ).to_addr(), 1}}, {permission_level_weight{{creator, config::active_name}, 1}});
       } else {
          owner_auth =  authority( get_public_key( a, "owner" ) );
       }
@@ -468,7 +468,7 @@ public:
                                             ("account", name(config::system_account_name).to_string())
                                             ("permission", name(config::active_name).to_string())
                                             ("parent", name(config::owner_name).to_string())
-                                            ("auth",  authority(1, {key_weight{get_public_key( config::system_account_name, "active" ), 1}}, {
+                                            ("auth",  authority(1, {key_weight{get_public_key( config::system_account_name, "active" ).to_addr(), 1}}, {
                                                   permission_level_weight{{config::system_account_name, config::eosio_code_name}, 1},
                                                      permission_level_weight{{config::producers_account_name,  config::active_name}, 1}
                                                }
