@@ -775,6 +775,18 @@ CLI::callback_t obsoleted_option_host_port = [](CLI::results_t) {
    return false;
 };
 
+bool validate_address (std::string addr) {
+    if (addr[0] == '1') {
+        std::vector<char> vchRet = fc::from_base58(addr);
+        uint256 hash = fc::sha256::hash(fc::sha256::hash(string(vchRet.begin(), vchRet.end()-4)));
+        if (memcmp(&hash, &vchRet[vchRet.size() - 4], 4) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 struct register_producer_subcommand {
    string producer_str;
    string producer_key_str;
@@ -846,6 +858,16 @@ struct create_account_subcommand {
             // try {
             //    active_key = public_key_type(active_key_str);
             // } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid active public key: ${public_key}", ("public_key", active_key_str));
+            if (!validate_address(owner_key_str)) {
+                std::cerr << "Invalidate owner key!\n";
+                return;
+            }
+            if (!validate_address(active_key_str)) {
+                std::cerr << "Invalidate active key!\n";
+                return;
+            }
+            owner_key = owner_key_str;
+            active_key = active_key_str;
             auto create = create_newaccount(creator, account_name, owner_key, active_key);
             if (!simple) {
                if ( buy_ram_eos.empty() && buy_ram_bytes_in_kbytes == 0) {
