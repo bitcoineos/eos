@@ -41,7 +41,7 @@ namespace eosio { namespace chain {
             flat_set<account_name>   contract_whitelist;
             flat_set<account_name>   contract_blacklist;
             flat_set< pair<account_name, action_name> > action_blacklist;
-            flat_set<public_key_type> key_blacklist;
+            flat_set<std::string>    key_blacklist;
             path                     blocks_dir             =  chain::config::default_blocks_dir_name;
             path                     state_dir              =  chain::config::default_state_dir_name;
             uint64_t                 state_size             =  chain::config::default_state_size;
@@ -161,7 +161,7 @@ namespace eosio { namespace chain {
 
          void check_contract_list( account_name code )const;
          void check_action_list( account_name code, action_name action )const;
-         void check_key_list( const public_key_type& key )const;
+         void check_key_list( const std::string& key )const;
          bool is_producing_block()const;
 
 

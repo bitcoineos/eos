@@ -1105,7 +1105,7 @@ struct controller_impl {
       }
    }
 
-   void check_key_list( const public_key_type& key )const {
+   void check_key_list( const std::string& key )const {
       if( conf.key_blacklist.size() > 0 ) {
          EOS_ASSERT( conf.key_blacklist.find( key ) == conf.key_blacklist.end(),
                      key_blacklist_exception,
@@ -1461,7 +1461,7 @@ void controller::check_action_list( account_name code, action_name action )const
    my->check_action_list( code, action );
 }
 
-void controller::check_key_list( const public_key_type& key )const {
+void controller::check_key_list( const std::string& key )const {
    my->check_key_list( key );
 }
 
