@@ -84,22 +84,26 @@ namespace eosiosystem {
       if( usecs_since_last_fill > 0 && _gstate.last_pervote_bucket_fill > 0 ) {
          auto new_tokens = static_cast<int64_t>( (continuous_rate * double(token_supply.amount) * double(usecs_since_last_fill)) / double(useconds_per_year) );
 
-         auto to_producers       = new_tokens / 5;
-         auto to_savings         = new_tokens - to_producers;
-         auto to_per_block_pay   = to_producers / 4;
-         auto to_per_vote_pay    = to_producers - to_per_block_pay;
+        //  auto to_producers       = new_tokens / 5;
+        //  auto to_savings         = new_tokens - to_producers;
+        //  auto to_per_block_pay   = to_producers / 4;
+        //  auto to_per_vote_pay    = to_producers - to_per_block_pay;
 
+         auto to_producers       = new_tokens;
+         auto to_per_block_pay   = to_producers;
+         auto to_per_vote_pay    = 0;
+         
          INLINE_ACTION_SENDER(eosio::token, issue)( N(eosio.token), {{N(eosio),N(active)}},
                                                     {N(eosio), asset(new_tokens), std::string("issue tokens for producer pay and savings")} );
 
-         INLINE_ACTION_SENDER(eosio::token, transfer)( N(eosio.token), {N(eosio),N(active)},
-                                                       { N(eosio), N(eosio.saving), asset(to_savings), "unallocated inflation" } );
+        //  INLINE_ACTION_SENDER(eosio::token, transfer)( N(eosio.token), {N(eosio),N(active)},
+        //                                                { N(eosio), N(eosio.saving), asset(to_savings), "unallocated inflation" } );
 
          INLINE_ACTION_SENDER(eosio::token, transfer)( N(eosio.token), {N(eosio),N(active)},
                                                        { N(eosio), N(eosio.bpay), asset(to_per_block_pay), "fund per-block bucket" } );
 
-         INLINE_ACTION_SENDER(eosio::token, transfer)( N(eosio.token), {N(eosio),N(active)},
-                                                       { N(eosio), N(eosio.vpay), asset(to_per_vote_pay), "fund per-vote bucket" } );
+        //  INLINE_ACTION_SENDER(eosio::token, transfer)( N(eosio.token), {N(eosio),N(active)},
+        //                                                { N(eosio), N(eosio.vpay), asset(to_per_vote_pay), "fund per-vote bucket" } );
 
          _gstate.pervote_bucket  += to_per_vote_pay;
          _gstate.perblock_bucket += to_per_block_pay;
