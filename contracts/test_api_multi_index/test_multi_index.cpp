@@ -81,7 +81,7 @@ namespace _test_multi_index {
 
       // Construct and fill table using multi_index
       multi_index<TableName, record,
-         indexed_by< N(bysecondary), const_mem_fun<record, uint64_t, &record::get_secondary> >
+         indexed_by< N(bysecondar), const_mem_fun<record, uint64_t, &record::get_secondary> >
       > table( receiver, receiver );
 
       auto payer = receiver;
@@ -103,12 +103,12 @@ namespace _test_multi_index {
 
       // Load table using multi_index
       multi_index<TableName, record,
-         indexed_by< N(bysecondary), const_mem_fun<record, uint64_t, &record::get_secondary> >
+         indexed_by< N(bysecondar), const_mem_fun<record, uint64_t, &record::get_secondary> >
       > table( receiver, receiver );
 
       auto payer = receiver;
 
-      auto secondary_index = table.template get_index<N(bysecondary)>();
+      auto secondary_index = table.template get_index<N(bysecondar)>();
 
       // find by primary key
       {
@@ -201,7 +201,7 @@ namespace _test_multi_index {
 
       // Construct and fill table using multi_index
       multi_index<TableName, record,
-         indexed_by< N(bysecondary), const_mem_fun<record, uint128_t, &record::get_secondary> >
+         indexed_by< N(bysecondar), const_mem_fun<record, uint128_t, &record::get_secondary> >
       > table( receiver, receiver );
 
       auto payer = receiver;
@@ -223,12 +223,12 @@ namespace _test_multi_index {
 
       // Load table using multi_index
       multi_index<TableName, record,
-         indexed_by< N(bysecondary), const_mem_fun<record, uint128_t, &record::get_secondary> >
+         indexed_by< N(bysecondar), const_mem_fun<record, uint128_t, &record::get_secondary> >
       > table( receiver, receiver );
 
       auto payer = receiver;
 
-      auto secondary_index = table.template get_index<N(bysecondary)>();
+      auto secondary_index = table.template get_index<N(bysecondar)>();
 
       table.modify(table.get(3), payer, [&]( auto& r ) {
          r.sec *= 2;
@@ -269,34 +269,34 @@ namespace _test_multi_index {
 
 void test_multi_index::idx64_store_only(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   _test_multi_index::idx64_store_only<N(indextable1)>(receiver);
+   _test_multi_index::idx64_store_only<N(ndextable1)>(receiver);
 }
 
 void test_multi_index::idx64_check_without_storing(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   _test_multi_index::idx64_check_without_storing<N(indextable1)>(receiver);
+   _test_multi_index::idx64_check_without_storing<N(ndextable1)>(receiver);
 }
 
 void test_multi_index::idx64_general(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   _test_multi_index::idx64_store_only<N(indextable2)>(receiver);
-   _test_multi_index::idx64_check_without_storing<N(indextable2)>(receiver);
+   _test_multi_index::idx64_store_only<N(ndextable2)>(receiver);
+   _test_multi_index::idx64_check_without_storing<N(ndextable2)>(receiver);
 }
 
 void test_multi_index::idx128_store_only(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   _test_multi_index::idx128_store_only<N(indextable3)>(receiver);
+   _test_multi_index::idx128_store_only<N(ndextable3)>(receiver);
 }
 
 void test_multi_index::idx128_check_without_storing(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   _test_multi_index::idx128_check_without_storing<N(indextable3)>(receiver);
+   _test_multi_index::idx128_check_without_storing<N(ndextable3)>(receiver);
 }
 
 void test_multi_index::idx128_general(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   _test_multi_index::idx128_store_only<N(indextable4)>(receiver);
-   _test_multi_index::idx128_check_without_storing<N(indextable4)>(receiver);
+   _test_multi_index::idx128_store_only<N(ndextable4)>(receiver);
+   _test_multi_index::idx128_check_without_storing<N(ndextable4)>(receiver);
 }
 
 void test_multi_index::idx128_autoincrement_test(uint64_t receiver, uint64_t code, uint64_t action)
@@ -306,11 +306,11 @@ void test_multi_index::idx128_autoincrement_test(uint64_t receiver, uint64_t cod
 
    typedef record_idx128 record;
 
-   const uint64_t table_name = N(autoinctbl1);
+   const uint64_t table_name = N(utoinctbl1);
    auto payer = receiver;
 
    multi_index<table_name, record,
-      indexed_by< N(bysecondary), const_mem_fun<record, uint128_t, &record::get_secondary> >
+      indexed_by< N(bysecondar), const_mem_fun<record, uint128_t, &record::get_secondary> >
    > table( receiver, receiver );
 
    for( int i = 0; i < 5; ++i ) {
@@ -321,7 +321,7 @@ void test_multi_index::idx128_autoincrement_test(uint64_t receiver, uint64_t cod
    }
 
    uint64_t expected_key = 4;
-   for( const auto& r : table.get_index<N(bysecondary)>() )
+   for( const auto& r : table.get_index<N(bysecondar)>() )
    {
       eosio_assert( r.primary_key() == expected_key, "idx128_autoincrement_test - unexpected primary key" );
       --expected_key;
@@ -354,11 +354,11 @@ void test_multi_index::idx128_autoincrement_test_part1(uint64_t receiver, uint64
 
    typedef record_idx128 record;
 
-   const uint64_t table_name = N(autoinctbl2);
+   const uint64_t table_name = N(utoinctbl2);
    auto payer = receiver;
 
    multi_index<table_name, record,
-      indexed_by< N(bysecondary), const_mem_fun<record, uint128_t, &record::get_secondary> >
+      indexed_by< N(bysecondar), const_mem_fun<record, uint128_t, &record::get_secondary> >
    > table( receiver, receiver );
 
    for( int i = 0; i < 3; ++i ) {
@@ -371,7 +371,7 @@ void test_multi_index::idx128_autoincrement_test_part1(uint64_t receiver, uint64
    table.erase(table.get(0));
 
    uint64_t expected_key = 2;
-   for( const auto& r : table.get_index<N(bysecondary)>() )
+   for( const auto& r : table.get_index<N(bysecondar)>() )
    {
       eosio_assert( r.primary_key() == expected_key, "idx128_autoincrement_test_part1 - unexpected primary key" );
       --expected_key;
@@ -387,19 +387,19 @@ void test_multi_index::idx128_autoincrement_test_part2(uint64_t receiver, uint64
 
    typedef record_idx128 record;
 
-   const uint64_t table_name = N(autoinctbl2);
+   const uint64_t table_name = N(utoinctbl2);
    auto payer = receiver;
 
    {
       multi_index<table_name, record,
-         indexed_by< N(bysecondary), const_mem_fun<record, uint128_t, &record::get_secondary> >
+         indexed_by< N(bysecondar), const_mem_fun<record, uint128_t, &record::get_secondary> >
       > table( receiver, receiver );
 
       eosio_assert( table.available_primary_key() == 3, "idx128_autoincrement_test_part2 - did not recover expected next primary key");
    }
 
    multi_index<table_name, record,
-      indexed_by< N(bysecondary), const_mem_fun<record, uint128_t, &record::get_secondary> >
+      indexed_by< N(bysecondar), const_mem_fun<record, uint128_t, &record::get_secondary> >
    > table( receiver, receiver );
 
    table.emplace( payer, [&]( auto& r) {
@@ -417,7 +417,7 @@ void test_multi_index::idx128_autoincrement_test_part2(uint64_t receiver, uint64
    }
 
    uint64_t expected_key = 4;
-   for( const auto& r : table.get_index<N(bysecondary)>() )
+   for( const auto& r : table.get_index<N(bysecondar)>() )
    {
       eosio_assert( r.primary_key() == expected_key, "idx128_autoincrement_test_part2 - unexpected primary key" );
       --expected_key;
@@ -443,12 +443,12 @@ void test_multi_index::idx256_general(uint64_t receiver, uint64_t code, uint64_t
 
    typedef record_idx256 record;
 
-   const uint64_t table_name = N(indextable5);
+   const uint64_t table_name = N(ndextable5);
    auto payer = receiver;
 
    print("Testing key256 secondary index.\n");
    multi_index<table_name, record,
-      indexed_by< N(bysecondary), const_mem_fun<record, const key256&, &record::get_secondary> >
+      indexed_by< N(bysecondar), const_mem_fun<record, const key256&, &record::get_secondary> >
    > table( receiver, receiver );
 
    auto fourtytwo       = key256::make_from_word_sequence<uint64_t>(0ULL, 0ULL, 0ULL, 42ULL);
@@ -488,7 +488,7 @@ void test_multi_index::idx256_general(uint64_t receiver, uint64_t code, uint64_t
       eosio_assert( itr == table.end(), "idx256_general - primary key sort" );
    }
 
-   auto secidx = table.get_index<N(bysecondary)>();
+   auto secidx = table.get_index<N(bysecondar)>();
 
    auto lower1 = secidx.lower_bound(key256::make_from_word_sequence<uint64_t>(0ULL, 0ULL, 0ULL, 40ULL));
    print("First entry with a secondary key of at least 40 has ID=", lower1->id, ".\n");
@@ -549,15 +549,15 @@ void test_multi_index::idx_double_general(uint64_t receiver, uint64_t code, uint
 
    typedef record_idx_double record;
 
-   const uint64_t table_name = N(floattable1);
+   const uint64_t table_name = N(loattable1);
    auto payer = receiver;
 
    print("Testing double secondary index.\n");
    multi_index<table_name, record,
-      indexed_by< N(bysecondary), const_mem_fun<record, double, &record::get_secondary> >
+      indexed_by< N(bysecondar), const_mem_fun<record, double, &record::get_secondary> >
    > table( receiver, receiver );
 
-   auto secidx = table.get_index<N(bysecondary)>();
+   auto secidx = table.get_index<N(bysecondar)>();
 
    double tolerance = std::numeric_limits<double>::epsilon();
    print("tolerance = ", tolerance, "\n");
@@ -604,15 +604,15 @@ void test_multi_index::idx_long_double_general(uint64_t receiver, uint64_t code,
 
    typedef record_idx_long_double record;
 
-   const uint64_t table_name = N(floattable2);
+   const uint64_t table_name = N(loattable2);
    auto payer = receiver;
 
    print("Testing long double secondary index.\n");
    multi_index<table_name, record,
-      indexed_by< N(bysecondary), const_mem_fun<record, long double, &record::get_secondary> >
+      indexed_by< N(bysecondar), const_mem_fun<record, long double, &record::get_secondary> >
    > table( receiver, receiver );
 
-   auto secidx = table.get_index<N(bysecondary)>();
+   auto secidx = table.get_index<N(bysecondar)>();
 
    long double tolerance = std::min( static_cast<long double>(std::numeric_limits<double>::epsilon()),
                                      std::numeric_limits<long double>::epsilon() * 1e7l );
@@ -656,7 +656,7 @@ void test_multi_index::idx_long_double_general(uint64_t receiver, uint64_t code,
 
 void test_multi_index::idx64_pk_iterator_exceed_end(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
    auto end_itr = table.end();
    // Should fail
    ++end_itr;
@@ -664,15 +664,15 @@ void test_multi_index::idx64_pk_iterator_exceed_end(uint64_t receiver, uint64_t 
 
 void test_multi_index::idx64_sk_iterator_exceed_end(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto end_itr = table.get_index<N(bysecondary)>().end();
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto end_itr = table.get_index<N(bysecondar)>().end();
    // Should fail
    ++end_itr;
 }
 
 void test_multi_index::idx64_pk_iterator_exceed_begin(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
    auto begin_itr = table.begin();
    // Should fail
    --begin_itr;
@@ -680,16 +680,16 @@ void test_multi_index::idx64_pk_iterator_exceed_begin(uint64_t receiver, uint64_
 
 void test_multi_index::idx64_sk_iterator_exceed_begin(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto begin_itr = table.get_index<N(bysecondary)>().begin();
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto begin_itr = table.get_index<N(bysecondar)>().begin();
    // Should fail
    --begin_itr;
 }
 
 void test_multi_index::idx64_pass_pk_ref_to_other_table(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table1 = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto table2 = _test_multi_index::idx64_table<N(indextable2), N(bysecondary)>(receiver);
+   auto table1 = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto table2 = _test_multi_index::idx64_table<N(ndextable2), N(bysecondar)>(receiver);
 
    auto table1_pk_itr = table1.find(781);
    eosio_assert(table1_pk_itr != table1.end() && table1_pk_itr->sec == N(bob), "idx64_pass_pk_ref_to_other_table - table.find() of existing primary key");
@@ -700,20 +700,20 @@ void test_multi_index::idx64_pass_pk_ref_to_other_table(uint64_t receiver, uint6
 
 void test_multi_index::idx64_pass_sk_ref_to_other_table(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table1 = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto table2 = _test_multi_index::idx64_table<N(indextable2), N(bysecondary)>(receiver);
+   auto table1 = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto table2 = _test_multi_index::idx64_table<N(ndextable2), N(bysecondar)>(receiver);
 
    auto table1_pk_itr = table1.find(781);
    eosio_assert(table1_pk_itr != table1.end() && table1_pk_itr->sec == N(bob), "idx64_pass_sk_ref_to_other_table - table.find() of existing primary key");
 
-   auto table2_sec_index = table2.get_index<N(bysecondary)>();
+   auto table2_sec_index = table2.get_index<N(bysecondar)>();
    // Should fail
    table2_sec_index.iterator_to(*table1_pk_itr);
 }
 
 void test_multi_index::idx64_pass_pk_end_itr_to_iterator_to(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
    auto end_itr = table.end();
    // Should fail
    table.iterator_to(*end_itr);
@@ -721,7 +721,7 @@ void test_multi_index::idx64_pass_pk_end_itr_to_iterator_to(uint64_t receiver, u
 
 void test_multi_index::idx64_pass_pk_end_itr_to_modify(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
    auto end_itr = table.end();
 
    auto payer = receiver;
@@ -732,7 +732,7 @@ void test_multi_index::idx64_pass_pk_end_itr_to_modify(uint64_t receiver, uint64
 
 void test_multi_index::idx64_pass_pk_end_itr_to_erase(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
    auto end_itr = table.end();
 
    // Should fail
@@ -741,8 +741,8 @@ void test_multi_index::idx64_pass_pk_end_itr_to_erase(uint64_t receiver, uint64_
 
 void test_multi_index::idx64_pass_sk_end_itr_to_iterator_to(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto sec_index = table.get_index<N(bysecondary)>();
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto sec_index = table.get_index<N(bysecondar)>();
    auto end_itr = sec_index.end();
 
    // Should fail
@@ -751,8 +751,8 @@ void test_multi_index::idx64_pass_sk_end_itr_to_iterator_to(uint64_t receiver, u
 
 void test_multi_index::idx64_pass_sk_end_itr_to_modify(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto sec_index = table.get_index<N(bysecondary)>();
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto sec_index = table.get_index<N(bysecondar)>();
    auto end_itr = sec_index.end();
 
    auto payer = receiver;
@@ -763,8 +763,8 @@ void test_multi_index::idx64_pass_sk_end_itr_to_modify(uint64_t receiver, uint64
 
 void test_multi_index::idx64_pass_sk_end_itr_to_erase(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
-   auto sec_index = table.get_index<N(bysecondary)>();
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
+   auto sec_index = table.get_index<N(bysecondar)>();
    auto end_itr = sec_index.end();
 
    // Should fail
@@ -773,7 +773,7 @@ void test_multi_index::idx64_pass_sk_end_itr_to_erase(uint64_t receiver, uint64_
 
 void test_multi_index::idx64_modify_primary_key(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
 
    auto pk_itr = table.find(781);
    eosio_assert(pk_itr != table.end() && pk_itr->sec == N(bob), "idx64_modify_primary_key - table.find() of existing primary key");
@@ -788,7 +788,7 @@ void test_multi_index::idx64_modify_primary_key(uint64_t receiver, uint64_t code
 
 void test_multi_index::idx64_run_out_of_avl_pk(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
 
    auto pk_itr = table.find(781);
    eosio_assert(pk_itr != table.end() && pk_itr->sec == N(bob), "idx64_modify_primary_key - table.find() of existing primary key");
@@ -812,9 +812,9 @@ void test_multi_index::idx64_run_out_of_avl_pk(uint64_t receiver, uint64_t code,
 
 void test_multi_index::idx64_sk_cache_pk_lookup(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
 
-   auto sec_index = table.get_index<N(bysecondary)>();
+   auto sec_index = table.get_index<N(bysecondar)>();
    auto sk_itr = sec_index.find(N(bob));
    eosio_assert(sk_itr != sec_index.end() && sk_itr->id == 540, "idx64_sk_cache_pk_lookup - sec_index.find() of existing secondary key");
 
@@ -825,13 +825,13 @@ void test_multi_index::idx64_sk_cache_pk_lookup(uint64_t receiver, uint64_t code
 
 void test_multi_index::idx64_pk_cache_sk_lookup(uint64_t receiver, uint64_t code, uint64_t action)
 {
-   auto table = _test_multi_index::idx64_table<N(indextable1), N(bysecondary)>(receiver);
+   auto table = _test_multi_index::idx64_table<N(ndextable1), N(bysecondar)>(receiver);
 
 
    auto pk_itr = table.find(540);
    eosio_assert(pk_itr != table.end() && pk_itr->sec == N(bob), "idx64_pk_cache_sk_lookup - table.find() of existing primary key");
 
-   auto sec_index = table.get_index<N(bysecondary)>();
+   auto sec_index = table.get_index<N(bysecondar)>();
    auto sk_itr = sec_index.iterator_to(*pk_itr);
    auto next_itr = ++sk_itr;
    eosio_assert(next_itr->id == 781 && next_itr->sec == N(bob), "idx64_pk_cache_sk_lookup - next record");

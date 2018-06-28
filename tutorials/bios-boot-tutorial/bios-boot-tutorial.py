@@ -319,7 +319,7 @@ def stepVote():
 def stepProxyVotes():
     proxyVotes(0, 0 + args.num_voters)
 def stepResign():
-    resign('eosio', 'eosio.prods')
+    resign('eosio', 'eosio.prod')
     for a in systemAccounts:
         resign(a, 'eosio')
 def stepTransfer():

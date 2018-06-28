@@ -398,17 +398,17 @@ BOOST_FIXTURE_TEST_CASE( big_transaction, eosio_msig_tester ) try {
 
 BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, eosio_msig_tester ) try {
 
-   // required to set up the link between (eosio active) and (eosio.prods active)
+   // required to set up the link between (eosio active) and (eosio.prod active)
    //
    //                  eosio active
    //                       |
-   //             eosio.prods active (2/3 threshold)
+   //             eosio.prod active (2/3 threshold)
    //             /         |        \             <--- implicitly updated in onblock action
    // alice active     bob active   carol active
 
    set_authority(N(eosio), "active", authority(1,
       vector<key_weight>{{get_private_key("eosio", "active").get_public_key().to_addr(), 1}},
-      vector<permission_level_weight>{{{N(eosio.prods), config::active_name}, 1}}), "owner",
+      vector<permission_level_weight>{{{N(eosio.prod), config::active_name}, 1}}), "owner",
       { { N(eosio), "active" } }, { get_private_key( N(eosio), "active" ) });
 
    set_producers( {N(alice),N(bob),N(carol)} );
@@ -516,10 +516,10 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, eosio_msig_tester )
 
 BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, eosio_msig_tester ) try {
 
-   // set up the link between (eosio active) and (eosio.prods active)
+   // set up the link between (eosio active) and (eosio.prod active)
    set_authority(N(eosio), "active", authority(1,
       vector<key_weight>{{get_private_key("eosio", "active").get_public_key().to_addr(), 1}},
-      vector<permission_level_weight>{{{N(eosio.prods), config::active_name}, 1}}), "owner",
+      vector<permission_level_weight>{{{N(eosio.prod), config::active_name}, 1}}), "owner",
       { { N(eosio), "active" } }, { get_private_key( N(eosio), "active" ) });
 
    create_accounts( { N(apple) } );

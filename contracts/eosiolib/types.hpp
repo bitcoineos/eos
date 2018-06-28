@@ -19,10 +19,14 @@ namespace eosio {
     *  @ingroup types
     */
    static constexpr  char char_to_symbol( char c ) {
+      if( c == '/' )
+         return 63;
+      if( c >= 'A' && c <= 'Z' )
+         return (c - 'A') + 37;
       if( c >= 'a' && c <= 'z' )
-         return (c - 'a') + 6;
-      if( c >= '1' && c <= '5' )
-         return (c - '1') + 1;
+         return (c - 'a') + 11;
+      if( c >= '0' && c <= '9' )
+         return (c - '0') + 1;
       return 0;
    }
 
@@ -42,13 +46,13 @@ namespace eosio {
 
       uint64_t value = 0;
 
-      for( uint32_t i = 0; i <= 12; ++i ) {
+      for( uint32_t i = 0; i <= 10; ++i ) {
          uint64_t c = 0;
-         if( i < len && i <= 12 ) c = uint64_t(char_to_symbol( str[i] ));
+         if( i < len && i <= 10 ) c = uint64_t(char_to_symbol( str[i] ));
 
-         if( i < 12 ) {
-            c &= 0x1f;
-            c <<= 64-5*(i+1);
+         if( i < 10 ) {
+            c &= 0x3f;
+            c <<= 64-6*(i+1);
          }
          else {
             c &= 0x0f;
@@ -70,9 +74,9 @@ namespace eosio {
    static constexpr uint64_t name_suffix( uint64_t n ) {
       uint32_t remaining_bits_after_last_actual_dot = 0;
       uint32_t tmp = 0;
-      for( int32_t remaining_bits = 59; remaining_bits >= 4; remaining_bits -= 5 ) { // Note: remaining_bits must remain signed integer
+      for( int32_t remaining_bits = 59; remaining_bits >= 4; remaining_bits -= 6 ) { // Note: remaining_bits must remain signed integer
          // Get characters one-by-one in name in order from left to right (not including the 13th character)
-         auto c = (n >> remaining_bits) & 0x1Full;
+         auto c = (n >> remaining_bits) & 0x3Full;
          if( !c ) { // if this character is a dot
             tmp = static_cast<uint32_t>(remaining_bits);
          } else { // if this character is not a dot
@@ -81,7 +85,7 @@ namespace eosio {
       }
 
       uint64_t thirteenth_character = n & 0x0Full;
-      if( thirteenth_character ) { // if 13th character is not a dot
+      if( thirteenth_character ) { // if 11st character is not a dot
          remaining_bits_after_last_actual_dot = tmp;
       }
 
@@ -111,16 +115,18 @@ namespace eosio {
 
       // keep in sync with name::operator string() in eosio source code definition for name
       std::string to_string() const {
-         static const char* charmap = ".12345abcdefghijklmnopqrstuvwxyz";
+        static const char* charmap = ".0123456789"
+        "abcdefghijklmnopqrstuvwxyz"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ/";
 
-         std::string str(13,'.');
+        std::string str(11,'.');
 
-         uint64_t tmp = value;
-         for( uint32_t i = 0; i <= 12; ++i ) {
-            char c = charmap[tmp & (i == 0 ? 0x0f : 0x1f)];
-            str[12-i] = c;
-            tmp >>= (i == 0 ? 4 : 5);
-         }
+        uint64_t tmp = value;
+        for( uint32_t i = 0; i <= 10; ++i ) {
+            char c = charmap[tmp & (i == 0 ? 0x0f : 0x3f)];
+            str[10-i] = c;
+            tmp >>= (i == 0 ? 4 : 6);
+        }
 
          trim_right_dots( str );
          return str;
