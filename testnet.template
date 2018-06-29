@@ -98,9 +98,9 @@ step=$(($step + 1))
 ecmd set contract eosio contracts/eosio.system contracts/eosio.system/eosio.system.wast contracts/eosio.system/eosio.system.abi
 
 echo ===== Start: $step ============ >> $logfile
-echo executing: cleos  --wallet-url $wdurl --url http://$bioshost:$biosport push action eosio issue '{"to":"eosio","quantity":"1000000000.0000 EOS","memo":"init"}' -p eosio@active | tee -a $logfile
+echo executing: cleos  --wallet-url $wdurl --url http://$bioshost:$biosport push action eosio issue '{"to":"BE","quantity":"1000000000.0000 EOS","memo":"init"}' -p eosio@active | tee -a $logfile
 echo ----------------------- >> $logfile
-programs/cleos/cleos  --wallet-url $wdurl --url http://$bioshost:$biosport push action eosio issue '{"to":"eosio","quantity":"1000000000.0000 EOS","memo":"init"}' -p eosio@active >> $logfile 2>&1
+programs/cleos/cleos  --wallet-url $wdurl --url http://$bioshost:$biosport push action eosio issue '{"to":"BE","quantity":"1000000000.0000 EOS","memo":"init"}' -p eosio@active >> $logfile 2>&1
 echo ==== End: $step ============== >> $logfile
 step=$(($step + 1))
 

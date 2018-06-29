@@ -3397,7 +3397,7 @@ BOOST_AUTO_TEST_CASE(abi_recursive_structs)
       )=====";
 
       abi_serializer abis(fc::json::from_string(abi_str).as<abi_def>());
-      string hi_data = "{\"user\":\"eosio\",\"arg2\":{\"user\":\"1\"}}";
+      string hi_data = "{\"user\":\"BE\",\"arg2\":{\"user\":\"1\"}}";
       auto bin = abis.variant_to_binary("hi", fc::json::from_string(hi_data));
       BOOST_CHECK_THROW( abis.binary_to_variant("hi", bin);, fc::exception );
 

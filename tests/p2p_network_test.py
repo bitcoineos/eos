@@ -142,7 +142,7 @@ if node0 is None:
 
 # eosio should have the same key as defproducera
 eosio = copy.copy(defproduceraAccount)
-eosio.name = "eosio"
+eosio.name = "BE"
 
 Print("Info of each node:")
 for i in range(len(hosts)):

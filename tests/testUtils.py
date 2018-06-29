@@ -929,7 +929,7 @@ class Node(object):
         """Returns SYS currency0000 account balance from cleos get table command. Returned balance is string following syntax "98.0311 SYS". """
         assert isinstance(scope, str)
         if not self.enableMongo:
-            amount=self.getTableAccountBalance("eosio.token", scope)
+            amount=self.getTableAccountBalance("BE.token", scope)
             if Utils.Debug: Utils.Print("getNodeAccountEosBalance %s %s" % (scope, amount))
             assert isinstance(amount, str)
             return amount
@@ -1445,7 +1445,7 @@ class Cluster(object):
         # init accounts
         self.defproduceraAccount=Account("defproducera")
         self.defproducerbAccount=Account("defproducerb")
-        self.eosioAccount=Account("eosio")
+        self.eosioAccount=Account("BE")
         self.defproduceraAccount.ownerPrivateKey=defproduceraPrvtKey
         self.defproduceraAccount.activePrivateKey=defproduceraPrvtKey
         self.defproducerbAccount.ownerPrivateKey=defproducerbPrvtKey
@@ -1555,7 +1555,7 @@ class Cluster(object):
             account.activePrivateKey=keys["private"]
             account.activePublicKey=keys["public"]
 
-        initAccountKeys(self.eosioAccount, producerKeys["eosio"])
+        initAccountKeys(self.eosioAccount, producerKeys["BE"])
         initAccountKeys(self.defproduceraAccount, producerKeys["defproducera"])
         initAccountKeys(self.defproducerbAccount, producerKeys["defproducerb"])
 
@@ -1994,7 +1994,7 @@ class Cluster(object):
                 Utils.Print("ERROR: Failed to create ignition wallet.")
                 return False
 
-            eosioName="eosio"
+            eosioName="BE"
             eosioKeys=producerKeys[eosioName]
             eosioAccount=Account(eosioName)
             eosioAccount.ownerPrivateKey=eosioKeys["private"]
@@ -2006,7 +2006,7 @@ class Cluster(object):
                 Utils.Print("ERROR: Failed to import %s account keys into ignition wallet." % (eosioName))
                 return False
 
-            contract="eosio.bios"
+            contract="BE.bios"
             contractDir="contracts/%s" % (contract)
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
@@ -2050,7 +2050,7 @@ class Cluster(object):
 
                         Utils.Print("Setting producers.")
                         opts="--permission eosio@active"
-                        myTrans=biosNode.pushMessage("eosio", "setprods", setProdsStr, opts)
+                        myTrans=biosNode.pushMessage("BE", "setprods", setProdsStr, opts)
                         if myTrans is None or not myTrans[0]:
                             Utils.Print("ERROR: Failed to set producers.")
                             return False
@@ -2076,7 +2076,7 @@ class Cluster(object):
                     Utils.Print("Setting producers: %s." % (", ".join(prodNames)))
                     opts="--permission eosio@active"
                     # pylint: disable=redefined-variable-type
-                    trans=biosNode.pushMessage("eosio", "setprods", setProdsStr, opts)
+                    trans=biosNode.pushMessage("BE", "setprods", setProdsStr, opts)
                     if trans is None or not trans[0]:
                         Utils.Print("ERROR: Failed to set producer %s." % (keys["name"]))
                         return False
@@ -2087,35 +2087,35 @@ class Cluster(object):
                     return False
 
                 # wait for block production handover (essentially a block produced by anyone but eosio).
-                lam = lambda: biosNode.getInfo()["head_block_producer"] != "eosio"
+                lam = lambda: biosNode.getInfo()["head_block_producer"] != "BE"
                 ret=Utils.waitForBool(lam)
                 if not ret:
                     Utils.Print("ERROR: Block production handover failed.")
                     return False
 
             eosioTokenAccount=copy.deepcopy(eosioAccount)
-            eosioTokenAccount.name="eosio.token"
+            eosioTokenAccount.name="BE.token"
             trans=biosNode.createAccount(eosioTokenAccount, eosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (eosioTokenAccount.name))
                 return False
 
             eosioRamAccount=copy.deepcopy(eosioAccount)
-            eosioRamAccount.name="eosio.ram"
+            eosioRamAccount.name="BE.ram"
             trans=biosNode.createAccount(eosioRamAccount, eosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (eosioRamAccount.name))
                 return False
 
             eosioRamfeeAccount=copy.deepcopy(eosioAccount)
-            eosioRamfeeAccount.name="eosio.ramfee"
+            eosioRamfeeAccount.name="BE.ramfee"
             trans=biosNode.createAccount(eosioRamfeeAccount, eosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (eosioRamfeeAccount.name))
                 return False
 
             eosioStakeAccount=copy.deepcopy(eosioAccount)
-            eosioStakeAccount.name="eosio.stake"
+            eosioStakeAccount.name="BE.stake"
             trans=biosNode.createAccount(eosioStakeAccount, eosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (eosioStakeAccount.name))
@@ -2125,7 +2125,7 @@ class Cluster(object):
             transId=Node.getTransId(trans)
             biosNode.waitForTransInBlock(transId)
 
-            contract="eosio.token"
+            contract="BE.token"
             contractDir="contracts/%s" % (contract)
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
@@ -2174,7 +2174,7 @@ class Cluster(object):
                             (expectedAmount, actualAmount))
                 return False
 
-            contract="eosio.system"
+            contract="BE.system"
             contractDir="contracts/%s" % (contract)
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)

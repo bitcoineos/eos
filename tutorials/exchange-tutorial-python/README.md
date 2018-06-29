@@ -30,7 +30,7 @@ Deleting the `transactions.txt` file will prevent replay from working.
 `cleos set contract eosio.token /contracts/eosio.token -p eosio.token@active`
 
 ### Create EOS token steps
-`cleos push action eosio.token create '{"issuer": "eosio.token", "maximum_supply": "100000.0000 EOS", "can_freeze": 1, "can_recall": 1, "can_whitelist": 1}' -p eosio.token@active`
+`cleos push action eosio.token create '{"issuer": "BE.token", "maximum_supply": "100000.0000 EOS", "can_freeze": 1, "can_recall": 1, "can_whitelist": 1}' -p eosio.token@active`
 
 ### Issue token steps
 `cleos push action eosio.token issue '{"to": "scott", "quantity": "900.0000 EOS", "memo": "testing"}' -p eosio.token@active`

@@ -14,102 +14,102 @@ BOOST_AUTO_TEST_SUITE(eosio_system_tests)
 
 BOOST_FIXTURE_TEST_CASE( buysell, eosio_system_tester ) try {
 
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
 
-   transfer( "eosio", "alice1111111", core_from_string("1000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( success(), stake( "eosio", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   transfer( "BE", "alice11111", core_from_string("1000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "BE", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   auto total = get_total_stake( "alice1111111" );
+   auto total = get_total_stake( "alice11111" );
    auto init_bytes =  total["ram_bytes"].as_uint64();
 
-   const asset initial_ram_balance = get_balance(N(eosio.ram));
-   const asset initial_ramfee_balance = get_balance(N(eosio.ramfee));
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("200.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("800.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( initial_ram_balance + core_from_string("199.0000"), get_balance(N(eosio.ram)) );
-   BOOST_REQUIRE_EQUAL( initial_ramfee_balance + core_from_string("1.0000"), get_balance(N(eosio.ramfee)) );
+   const asset initial_ram_balance = get_balance(N(BE.ram));
+   const asset initial_ramfee_balance = get_balance(N(BE.ramfee));
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("200.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("800.0000"), get_balance( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( initial_ram_balance + core_from_string("199.0000"), get_balance(N(BE.ram)) );
+   BOOST_REQUIRE_EQUAL( initial_ramfee_balance + core_from_string("1.0000"), get_balance(N(BE.ramfee)) );
 
-   total = get_total_stake( "alice1111111" );
+   total = get_total_stake( "alice11111" );
    auto bytes = total["ram_bytes"].as_uint64();
    auto bought_bytes = bytes - init_bytes;
    wdump((init_bytes)(bought_bytes)(bytes) );
 
    BOOST_REQUIRE_EQUAL( true, 0 < bought_bytes );
 
-   BOOST_REQUIRE_EQUAL( success(), sellram( "alice1111111", bought_bytes ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("998.0049"), get_balance( "alice1111111" ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), sellram( "alice11111", bought_bytes ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("998.0049"), get_balance( "alice11111" ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( true, total["ram_bytes"].as_uint64() == init_bytes );
 
-   transfer( "eosio", "alice1111111", core_from_string("100000000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( core_from_string("100000998.0049"), get_balance( "alice1111111" ) );
+   transfer( "BE", "alice11111", core_from_string("100000000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( core_from_string("100000998.0049"), get_balance( "alice11111" ) );
    // alice buys ram for 10000000.0000, 0.5% = 50000.0000 go to ramfee
    // after fee 9950000.0000 go to bought bytes
    // when selling back bought bytes, pay 0.5% fee and get back 99.5% of 9950000.0000 = 9900250.0000
    // expected account after that is 90000998.0049 + 9900250.0000 = 99901248.0049 with a difference
    // of order 0.0001 due to rounding errors
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10000000.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("90000998.0049"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10000000.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("90000998.0049"), get_balance( "alice11111" ) );
 
-   total = get_total_stake( "alice1111111" );
+   total = get_total_stake( "alice11111" );
    bytes = total["ram_bytes"].as_uint64();
    bought_bytes = bytes - init_bytes;
    wdump((init_bytes)(bought_bytes)(bytes) );
 
-   BOOST_REQUIRE_EQUAL( success(), sellram( "alice1111111", bought_bytes ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), sellram( "alice11111", bought_bytes ) );
+   total = get_total_stake( "alice11111" );
 
    bytes = total["ram_bytes"].as_uint64();
    bought_bytes = bytes - init_bytes;
    wdump((init_bytes)(bought_bytes)(bytes) );
 
    BOOST_REQUIRE_EQUAL( true, total["ram_bytes"].as_uint64() == init_bytes );
-   BOOST_REQUIRE_EQUAL( core_from_string("99901248.0041"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("99901248.0041"), get_balance( "alice11111" ) );
 
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("30.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("99900688.0041"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("30.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("99900688.0041"), get_balance( "alice11111" ) );
 
-   auto newtotal = get_total_stake( "alice1111111" );
+   auto newtotal = get_total_stake( "alice11111" );
 
    auto newbytes = newtotal["ram_bytes"].as_uint64();
    bought_bytes = newbytes - bytes;
    wdump((newbytes)(bytes)(bought_bytes) );
 
-   BOOST_REQUIRE_EQUAL( success(), sellram( "alice1111111", bought_bytes ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("99901242.4179"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), sellram( "alice11111", bought_bytes ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("99901242.4179"), get_balance( "alice11111" ) );
 
 
-   newtotal = get_total_stake( "alice1111111" );
+   newtotal = get_total_stake( "alice11111" );
    auto startbytes = newtotal["ram_bytes"].as_uint64();
 
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10000000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10000000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10000000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10000000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("10000000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("100000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), buyram( "alice1111111", "alice1111111", core_from_string("300000.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("49301242.4179"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10000000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10000000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10000000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10000000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("10000000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("100000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), buyram( "alice11111", "alice11111", core_from_string("300000.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("49301242.4179"), get_balance( "alice11111" ) );
 
-   auto finaltotal = get_total_stake( "alice1111111" );
+   auto finaltotal = get_total_stake( "alice11111" );
    auto endbytes = finaltotal["ram_bytes"].as_uint64();
 
    bought_bytes = endbytes - startbytes;
    wdump((startbytes)(endbytes)(bought_bytes) );
 
-   BOOST_REQUIRE_EQUAL( success(), sellram( "alice1111111", bought_bytes ) );
+   BOOST_REQUIRE_EQUAL( success(), sellram( "alice11111", bought_bytes ) );
 
-   BOOST_REQUIRE_EQUAL( core_from_string("99396507.4142"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("99396507.4142"), get_balance( "alice11111" ) );
 
 } FC_LOG_AND_RETHROW()
 
@@ -119,128 +119,128 @@ BOOST_FIXTURE_TEST_CASE( stake_unstake, eosio_system_tester ) try {
    produce_blocks( 10 );
    produce_block( fc::hours(3*24) );
 
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
-   transfer( "eosio", "alice1111111", core_from_string("1000.0000"), "eosio" );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
+   transfer( "BE", "alice11111", core_from_string("1000.0000"), "BE" );
 
-   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( success(), stake( "eosio", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "BE", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   auto total = get_total_stake("alice1111111");
+   auto total = get_total_stake("alice11111");
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
 
-   const auto init_eosio_stake_balance = get_balance( N(eosio.stake) );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( init_eosio_stake_balance + core_from_string("300.0000"), get_balance( N(eosio.stake) ) );
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   const auto init_eosio_stake_balance = get_balance( N(BE.stake) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( init_eosio_stake_balance + core_from_string("300.0000"), get_balance( N(BE.stake) ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 
    produce_block( fc::hours(3*24-1) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( init_eosio_stake_balance + core_from_string("300.0000"), get_balance( N(eosio.stake) ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( init_eosio_stake_balance + core_from_string("300.0000"), get_balance( N(BE.stake) ) );
    //after 3 days funds should be released
    produce_block( fc::hours(1) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( init_eosio_stake_balance, get_balance( N(eosio.stake) ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( init_eosio_stake_balance, get_balance( N(BE.stake) ) );
 
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
-   total = get_total_stake("bob111111111");
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
+   total = get_total_stake("bob1111111");
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
 
-   total = get_total_stake( "alice1111111" );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000").get_amount(), total["net_weight"].as<asset>().get_amount() );
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000").get_amount(), total["cpu_weight"].as<asset>().get_amount() );
 
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000")), get_voter_info( "alice11111" ) );
 
    auto bytes = total["ram_bytes"].as_uint64();
    BOOST_REQUIRE_EQUAL( true, 0 < bytes );
 
    //unstake from bob111111111
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "bob111111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   total = get_total_stake("bob111111111");
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "bob1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   total = get_total_stake("bob1111111");
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["cpu_weight"].as<asset>());
    produce_block( fc::hours(3*24-1) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    //after 3 days funds should be released
    produce_block( fc::hours(1) );
    produce_blocks(1);
 
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("0.0000") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("0.0000") ), get_voter_info( "alice11111" ) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice11111" ) );
 } FC_LOG_AND_RETHROW()
 
 BOOST_FIXTURE_TEST_CASE( stake_unstake_with_transfer, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "eosio", core_from_string("1000.0000"), config::system_account_name );
-   issue( "eosio.stake", core_from_string("1000.0000"), config::system_account_name );
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
+   issue( "BE", core_from_string("1000.0000"), config::system_account_name );
+   issue( "BE.stake", core_from_string("1000.0000"), config::system_account_name );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
 
    //eosio stakes for alice with transfer flag
 
-   transfer( "eosio", "bob111111111", core_from_string("1000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "bob111111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   transfer( "BE", "bob1111111", core_from_string("1000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "bob1111111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
    //check that alice has both bandwidth and voting power
-   auto total = get_total_stake("alice1111111");
+   auto total = get_total_stake("alice11111");
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000")), get_voter_info( "alice11111" ) );
 
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
 
    //alice stakes for herself
-   transfer( "eosio", "alice1111111", core_from_string("1000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   transfer( "BE", "alice11111", core_from_string("1000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
    //now alice's stake should be equal to transfered from eosio + own stake
-   total = get_total_stake("alice1111111");
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   total = get_total_stake("alice11111");
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    BOOST_REQUIRE_EQUAL( core_from_string("410.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("600.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("600.0000")), get_voter_info( "alice11111" ) );
 
    //alice can unstake everything (including what was transfered)
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "alice1111111", core_from_string("400.0000"), core_from_string("200.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "alice11111", core_from_string("400.0000"), core_from_string("200.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 
    produce_block( fc::hours(3*24-1) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    //after 3 days funds should be released
 
    produce_block( fc::hours(1) );
    produce_blocks(1);
 
-   BOOST_REQUIRE_EQUAL( core_from_string("1300.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1300.0000"), get_balance( "alice11111" ) );
 
    //stake should be equal to what was staked in constructor, voting power should be 0
-   total = get_total_stake("alice1111111");
+   total = get_total_stake("alice11111");
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("0.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("0.0000")), get_voter_info( "alice11111" ) );
 
    // Now alice stakes to bob with transfer flag
-   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "alice1111111", "bob111111111", core_from_string("100.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "alice11111", "bob1111111", core_from_string("100.0000"), core_from_string("100.0000") ) );
 
 } FC_LOG_AND_RETHROW()
 
 BOOST_FIXTURE_TEST_CASE( stake_to_self_with_transfer, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
-   transfer( "eosio", "alice1111111", core_from_string("1000.0000"), "eosio" );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
+   transfer( "BE", "alice11111", core_from_string("1000.0000"), "BE" );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("cannot use transfer flag if delegating to self"),
-                        stake_with_transfer( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") )
+                        stake_with_transfer( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") )
    );
 
 } FC_LOG_AND_RETHROW()
@@ -248,70 +248,70 @@ BOOST_FIXTURE_TEST_CASE( stake_to_self_with_transfer, eosio_system_tester ) try 
 BOOST_FIXTURE_TEST_CASE( stake_while_pending_refund, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "eosio", core_from_string("1000.0000"), config::system_account_name );
-   issue( "eosio.stake", core_from_string("1000.0000"), config::system_account_name );
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
+   issue( "BE", core_from_string("1000.0000"), config::system_account_name );
+   issue( "BE.stake", core_from_string("1000.0000"), config::system_account_name );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
 
    //eosio stakes for alice with transfer flag
 
-   transfer( "eosio", "bob111111111", core_from_string("1000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "bob111111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   transfer( "BE", "bob1111111", core_from_string("1000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "bob1111111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
    //check that alice has both bandwidth and voting power
-   auto total = get_total_stake("alice1111111");
+   auto total = get_total_stake("alice11111");
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000")), get_voter_info( "alice11111" ) );
 
-   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice11111" ) );
 
    //alice stakes for herself
-   transfer( "eosio", "alice1111111", core_from_string("1000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   transfer( "BE", "alice11111", core_from_string("1000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
    //now alice's stake should be equal to transfered from eosio + own stake
-   total = get_total_stake("alice1111111");
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   total = get_total_stake("alice11111");
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    BOOST_REQUIRE_EQUAL( core_from_string("410.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("600.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("600.0000")), get_voter_info( "alice11111" ) );
 
    //alice can unstake everything (including what was transfered)
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "alice1111111", core_from_string("400.0000"), core_from_string("200.0000") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "alice11111", core_from_string("400.0000"), core_from_string("200.0000") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 
    produce_block( fc::hours(3*24-1) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    //after 3 days funds should be released
 
    produce_block( fc::hours(1) );
    produce_blocks(1);
 
-   BOOST_REQUIRE_EQUAL( core_from_string("1300.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1300.0000"), get_balance( "alice11111" ) );
 
    //stake should be equal to what was staked in constructor, voting power should be 0
-   total = get_total_stake("alice1111111");
+   total = get_total_stake("alice11111");
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("0.0000")), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("0.0000")), get_voter_info( "alice11111" ) );
 
    // Now alice stakes to bob with transfer flag
-   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "alice1111111", "bob111111111", core_from_string("100.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "alice11111", "bob1111111", core_from_string("100.0000"), core_from_string("100.0000") ) );
 
 } FC_LOG_AND_RETHROW()
 
 BOOST_FIXTURE_TEST_CASE( fail_without_auth, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
 
-   BOOST_REQUIRE_EQUAL( success(), stake( "eosio", "alice1111111", core_from_string("2000.0000"), core_from_string("1000.0000") ) );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("10.0000"), core_from_string("10.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "BE", "alice11111", core_from_string("2000.0000"), core_from_string("1000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("10.0000"), core_from_string("10.0000") ) );
 
    BOOST_REQUIRE_EQUAL( error("missing authority of alice1111111"),
                         push_action( N(alice1111111), N(delegatebw), mvo()
-                                    ("from",     "alice1111111")
-                                    ("receiver", "bob111111111")
+                                    ("from",     "alice11111")
+                                    ("receiver", "bob1111111")
                                     ("stake_net_quantity", core_from_string("10.0000"))
                                     ("stake_cpu_quantity", core_from_string("10.0000"))
                                     ("transfer", 0 )
@@ -321,65 +321,65 @@ BOOST_FIXTURE_TEST_CASE( fail_without_auth, eosio_system_tester ) try {
 
    BOOST_REQUIRE_EQUAL( error("missing authority of alice1111111"),
                         push_action(N(alice1111111), N(undelegatebw), mvo()
-                                    ("from",     "alice1111111")
-                                    ("receiver", "bob111111111")
+                                    ("from",     "alice11111")
+                                    ("receiver", "bob1111111")
                                     ("unstake_net_quantity", core_from_string("200.0000"))
                                     ("unstake_cpu_quantity", core_from_string("100.0000"))
                                     ("transfer", 0 )
                                     ,false
                         )
    );
-   //REQUIRE_MATCHING_OBJECT( , get_voter_info( "alice1111111" ) );
+   //REQUIRE_MATCHING_OBJECT( , get_voter_info( "alice11111" ) );
 } FC_LOG_AND_RETHROW()
 
 
 BOOST_FIXTURE_TEST_CASE( stake_negative, eosio_system_tester ) try {
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must stake a positive amount"),
-                        stake( "alice1111111", core_from_string("-0.0001"), core_from_string("0.0000") )
+                        stake( "alice11111", core_from_string("-0.0001"), core_from_string("0.0000") )
    );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must stake a positive amount"),
-                        stake( "alice1111111", core_from_string("0.0000"), core_from_string("-0.0001") )
+                        stake( "alice11111", core_from_string("0.0000"), core_from_string("-0.0001") )
    );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must stake a positive amount"),
-                        stake( "alice1111111", core_from_string("00.0000"), core_from_string("00.0000") )
+                        stake( "alice11111", core_from_string("00.0000"), core_from_string("00.0000") )
    );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must stake a positive amount"),
-                        stake( "alice1111111", core_from_string("0.0000"), core_from_string("00.0000") )
+                        stake( "alice11111", core_from_string("0.0000"), core_from_string("00.0000") )
 
    );
 
-   BOOST_REQUIRE_EQUAL( true, get_voter_info( "alice1111111" ).is_null() );
+   BOOST_REQUIRE_EQUAL( true, get_voter_info( "alice11111" ).is_null() );
 } FC_LOG_AND_RETHROW()
 
 
 BOOST_FIXTURE_TEST_CASE( unstake_negative, eosio_system_tester ) try {
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
 
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("200.0001"), core_from_string("100.0001") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("200.0001"), core_from_string("100.0001") ) );
 
-   auto total = get_total_stake( "bob111111111" );
+   auto total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0001"), total["net_weight"].as<asset>());
-   auto vinfo = get_voter_info("alice1111111" );
+   auto vinfo = get_voter_info("alice11111" );
    wdump((vinfo));
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0002") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0002") ), get_voter_info( "alice11111" ) );
 
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must unstake a positive amount"),
-                        unstake( "alice1111111", "bob111111111", core_from_string("-1.0000"), core_from_string("0.0000") )
+                        unstake( "alice11111", "bob1111111", core_from_string("-1.0000"), core_from_string("0.0000") )
    );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must unstake a positive amount"),
-                        unstake( "alice1111111", "bob111111111", core_from_string("0.0000"), core_from_string("-1.0000") )
+                        unstake( "alice11111", "bob1111111", core_from_string("0.0000"), core_from_string("-1.0000") )
    );
 
    //unstake all zeros
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("must unstake a positive amount"),
-                        unstake( "alice1111111", "bob111111111", core_from_string("0.0000"), core_from_string("0.0000") )
+                        unstake( "alice11111", "bob1111111", core_from_string("0.0000"), core_from_string("0.0000") )
 
    );
 
@@ -389,63 +389,63 @@ BOOST_FIXTURE_TEST_CASE( unstake_negative, eosio_system_tester ) try {
 BOOST_FIXTURE_TEST_CASE( unstake_more_than_at_stake, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   auto total = get_total_stake( "alice1111111" );
+   auto total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
 
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 
    //trying to unstake more net bandwith than at stake
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("insufficient staked net bandwidth"),
-                        unstake( "alice1111111", core_from_string("200.0001"), core_from_string("0.0000") )
+                        unstake( "alice11111", core_from_string("200.0001"), core_from_string("0.0000") )
    );
 
    //trying to unstake more cpu bandwith than at stake
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("insufficient staked cpu bandwidth"),
-                        unstake( "alice1111111", core_from_string("0.0000"), core_from_string("100.0001") )
+                        unstake( "alice11111", core_from_string("0.0000"), core_from_string("100.0001") )
 
    );
 
    //check that nothing has changed
-   total = get_total_stake( "alice1111111" );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 } FC_LOG_AND_RETHROW()
 
 
 BOOST_FIXTURE_TEST_CASE( delegate_to_another_user, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
 
-   BOOST_REQUIRE_EQUAL( success(), stake ( "alice1111111", "bob111111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake ( "alice11111", "bob1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   auto total = get_total_stake( "bob111111111" );
+   auto total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    //all voting power goes to alice1111111
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000") ), get_voter_info( "alice11111" ) );
    //but not to bob111111111
-   BOOST_REQUIRE_EQUAL( true, get_voter_info( "bob111111111" ).is_null() );
+   BOOST_REQUIRE_EQUAL( true, get_voter_info( "bob1111111" ).is_null() );
 
    //bob111111111 should not be able to unstake what was staked by alice1111111
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("insufficient staked cpu bandwidth"),
-                        unstake( "bob111111111", core_from_string("0.0000"), core_from_string("10.0000") )
+                        unstake( "bob1111111", core_from_string("0.0000"), core_from_string("10.0000") )
 
    );
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("insufficient staked net bandwidth"),
-                        unstake( "bob111111111", core_from_string("10.0000"),  core_from_string("0.0000") )
+                        unstake( "bob1111111", core_from_string("10.0000"),  core_from_string("0.0000") )
    );
 
    issue( "carol1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "carol1111111", "bob111111111", core_from_string("20.0000"), core_from_string("10.0000") ) );
-   total = get_total_stake( "bob111111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "carol1111111", "bob1111111", core_from_string("20.0000"), core_from_string("10.0000") ) );
+   total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("230.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("120.0000"), total["cpu_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("970.0000"), get_balance( "carol1111111" ) );
@@ -454,59 +454,59 @@ BOOST_FIXTURE_TEST_CASE( delegate_to_another_user, eosio_system_tester ) try {
    //alice1111111 should not be able to unstake money staked by carol1111111
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("insufficient staked net bandwidth"),
-                        unstake( "alice1111111", "bob111111111", core_from_string("2001.0000"), core_from_string("1.0000") )
+                        unstake( "alice11111", "bob1111111", core_from_string("2001.0000"), core_from_string("1.0000") )
    );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("insufficient staked cpu bandwidth"),
-                        unstake( "alice1111111", "bob111111111", core_from_string("1.0000"), core_from_string("101.0000") )
+                        unstake( "alice11111", "bob1111111", core_from_string("1.0000"), core_from_string("101.0000") )
 
    );
 
-   total = get_total_stake( "bob111111111" );
+   total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("230.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("120.0000"), total["cpu_weight"].as<asset>());
    //balance should not change after unsuccessfull attempts to unstake
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
    //voting power too
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000") ), get_voter_info( "alice11111" ) );
    REQUIRE_MATCHING_OBJECT( voter( "carol1111111", core_from_string("30.0000") ), get_voter_info( "carol1111111" ) );
-   BOOST_REQUIRE_EQUAL( true, get_voter_info( "bob111111111" ).is_null() );
+   BOOST_REQUIRE_EQUAL( true, get_voter_info( "bob1111111" ).is_null() );
 } FC_LOG_AND_RETHROW()
 
 
 BOOST_FIXTURE_TEST_CASE( stake_unstake_separate, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice1111111" ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice11111" ) );
 
    //everything at once
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("10.0000"), core_from_string("20.0000") ) );
-   auto total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("10.0000"), core_from_string("20.0000") ) );
+   auto total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("20.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("30.0000"), total["cpu_weight"].as<asset>());
 
    //cpu
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("100.0000"), core_from_string("0.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("100.0000"), core_from_string("0.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("120.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("30.0000"), total["cpu_weight"].as<asset>());
 
    //net
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("0.0000"), core_from_string("200.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("0.0000"), core_from_string("200.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("120.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("230.0000"), total["cpu_weight"].as<asset>());
 
    //unstake cpu
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", core_from_string("100.0000"), core_from_string("0.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", core_from_string("100.0000"), core_from_string("0.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("20.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("230.0000"), total["cpu_weight"].as<asset>());
 
    //unstake net
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", core_from_string("0.0000"), core_from_string("200.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", core_from_string("0.0000"), core_from_string("200.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("20.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("30.0000"), total["cpu_weight"].as<asset>());
 } FC_LOG_AND_RETHROW()
@@ -515,162 +515,162 @@ BOOST_FIXTURE_TEST_CASE( stake_unstake_separate, eosio_system_tester ) try {
 BOOST_FIXTURE_TEST_CASE( adding_stake_partial_unstake, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000") ), get_voter_info( "alice11111" ) );
 
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("100.0000"), core_from_string("50.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("100.0000"), core_from_string("50.0000") ) );
 
-   auto total = get_total_stake( "bob111111111" );
+   auto total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("310.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("160.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("450.0000") ), get_voter_info( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("550.0000"), get_balance( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("450.0000") ), get_voter_info( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("550.0000"), get_balance( "alice11111" ) );
 
    //unstake a share
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "bob111111111", core_from_string("150.0000"), core_from_string("75.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "bob1111111", core_from_string("150.0000"), core_from_string("75.0000") ) );
 
-   total = get_total_stake( "bob111111111" );
+   total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("160.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("85.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("225.0000") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("225.0000") ), get_voter_info( "alice11111" ) );
 
    //unstake more
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "bob111111111", core_from_string("50.0000"), core_from_string("25.0000") ) );
-   total = get_total_stake( "bob111111111" );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "bob1111111", core_from_string("50.0000"), core_from_string("25.0000") ) );
+   total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("60.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("150.0000") ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("150.0000") ), get_voter_info( "alice11111" ) );
 
    //combined amount should be available only in 3 days
    produce_block( fc::days(2) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("550.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("550.0000"), get_balance( "alice11111" ) );
    produce_block( fc::days(1) );
    produce_blocks(1);
-   BOOST_REQUIRE_EQUAL( core_from_string("850.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("850.0000"), get_balance( "alice11111" ) );
 
 } FC_LOG_AND_RETHROW()
 
 BOOST_FIXTURE_TEST_CASE( stake_from_refund, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   auto total = get_total_stake( "alice1111111" );
+   auto total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
 
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("50.0000"), core_from_string("50.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("50.0000"), core_from_string("50.0000") ) );
 
-   total = get_total_stake( "bob111111111" );
+   total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("60.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("60.0000"), total["cpu_weight"].as<asset>());
 
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("400.0000") ), get_voter_info( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("600.0000"), get_balance( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("400.0000") ), get_voter_info( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("600.0000"), get_balance( "alice11111" ) );
 
    //unstake a share
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "alice1111111", core_from_string("100.0000"), core_from_string("50.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "alice11111", core_from_string("100.0000"), core_from_string("50.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("60.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("250.0000") ), get_voter_info( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("600.0000"), get_balance( "alice1111111" ) );
-   auto refund = get_refund_request( "alice1111111" );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("250.0000") ), get_voter_info( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("600.0000"), get_balance( "alice11111" ) );
+   auto refund = get_refund_request( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("100.0000"), refund["net_amount"].as<asset>() );
    BOOST_REQUIRE_EQUAL( core_from_string( "50.0000"), refund["cpu_amount"].as<asset>() );
    //XXX auto request_time = refund["request_time"].as_int64();
 
    //alice delegates to bob, should pull from liquid balance not refund
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("50.0000"), core_from_string("50.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("50.0000"), core_from_string("50.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("60.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("350.0000") ), get_voter_info( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice1111111" ) );
-   refund = get_refund_request( "alice1111111" );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("350.0000") ), get_voter_info( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice11111" ) );
+   refund = get_refund_request( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("100.0000"), refund["net_amount"].as<asset>() );
    BOOST_REQUIRE_EQUAL( core_from_string( "50.0000"), refund["cpu_amount"].as<asset>() );
 
    //stake less than pending refund, entire amount should be taken from refund
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("50.0000"), core_from_string("25.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("50.0000"), core_from_string("25.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("160.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("85.0000"), total["cpu_weight"].as<asset>());
-   refund = get_refund_request( "alice1111111" );
+   refund = get_refund_request( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("50.0000"), refund["net_amount"].as<asset>() );
    BOOST_REQUIRE_EQUAL( core_from_string("25.0000"), refund["cpu_amount"].as<asset>() );
    //request time should stay the same
    //BOOST_REQUIRE_EQUAL( request_time, refund["request_time"].as_int64() );
    //balance should stay the same
-   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice11111" ) );
 
    //stake exactly pending refund amount
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("50.0000"), core_from_string("25.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("50.0000"), core_from_string("25.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
    //pending refund should be removed
-   refund = get_refund_request( "alice1111111" );
+   refund = get_refund_request( "alice11111" );
    BOOST_TEST_REQUIRE( refund.is_null() );
    //balance should stay the same
-   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice11111" ) );
 
    //create pending refund again
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("10.0000"), total["cpu_weight"].as<asset>());
-   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice1111111" ) );
-   refund = get_refund_request( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( core_from_string("500.0000"), get_balance( "alice11111" ) );
+   refund = get_refund_request( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("200.0000"), refund["net_amount"].as<asset>() );
    BOOST_REQUIRE_EQUAL( core_from_string("100.0000"), refund["cpu_amount"].as<asset>() );
 
    //stake more than pending refund
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("300.0000"), core_from_string("200.0000") ) );
-   total = get_total_stake( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("300.0000"), core_from_string("200.0000") ) );
+   total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("310.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["cpu_weight"].as<asset>());
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("700.0000") ), get_voter_info( "alice1111111" ) );
-   refund = get_refund_request( "alice1111111" );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("700.0000") ), get_voter_info( "alice11111" ) );
+   refund = get_refund_request( "alice11111" );
    BOOST_TEST_REQUIRE( refund.is_null() );
    //200 core tokens should be taken from alice's account
-   BOOST_REQUIRE_EQUAL( core_from_string("300.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("300.0000"), get_balance( "alice11111" ) );
 
 } FC_LOG_AND_RETHROW()
 
 BOOST_FIXTURE_TEST_CASE( stake_to_another_user_not_from_refund, eosio_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
-   auto total = get_total_stake( "alice1111111" );
+   auto total = get_total_stake( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111", core_from_string("300.0000") ), get_voter_info( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111", core_from_string("300.0000") ), get_voter_info( "alice11111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice11111" ) );
 
    //unstake
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   auto refund = get_refund_request( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   auto refund = get_refund_request( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("200.0000"), refund["net_amount"].as<asset>() );
    BOOST_REQUIRE_EQUAL( core_from_string("100.0000"), refund["cpu_amount"].as<asset>() );
    //auto orig_request_time = refund["request_time"].as_int64();
 
    //stake to another user
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   total = get_total_stake( "bob111111111" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "bob1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   total = get_total_stake( "bob1111111" );
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
    //stake should be taken from alices' balance, and refund request should stay the same
-   BOOST_REQUIRE_EQUAL( core_from_string("400.0000"), get_balance( "alice1111111" ) );
-   refund = get_refund_request( "alice1111111" );
+   BOOST_REQUIRE_EQUAL( core_from_string("400.0000"), get_balance( "alice11111" ) );
+   refund = get_refund_request( "alice11111" );
    BOOST_REQUIRE_EQUAL( core_from_string("200.0000"), refund["net_amount"].as<asset>() );
    BOOST_REQUIRE_EQUAL( core_from_string("100.0000"), refund["cpu_amount"].as<asset>() );
    //BOOST_REQUIRE_EQUAL( orig_request_time, refund["request_time"].as_int64() );
@@ -679,69 +679,69 @@ BOOST_FIXTURE_TEST_CASE( stake_to_another_user_not_from_refund, eosio_system_tes
 
 // Tests for voting
 BOOST_FIXTURE_TEST_CASE( producer_register_unregister, eosio_system_tester ) try {
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
 
    //fc::variant params = producer_parameters_example(1);
    auto key =  fc::crypto::public_key( std::string("EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV") );
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", key )
                                                ("url", "http://block.one")
                                                ("location", 1)
                         )
    );
 
-   auto info = get_producer_info( "alice1111111" );
-   BOOST_REQUIRE_EQUAL( "alice1111111", info["owner"].as_string() );
+   auto info = get_producer_info( "alice11111" );
+   BOOST_REQUIRE_EQUAL( "alice11111", info["owner"].as_string() );
    BOOST_REQUIRE_EQUAL( 0, info["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( "http://block.one", info["url"].as_string() );
 
    //change parameters one by one to check for things like #3783
    //fc::variant params2 = producer_parameters_example(2);
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", key )
                                                ("url", "http://block.two")
                                                ("location", 1)
                         )
    );
-   info = get_producer_info( "alice1111111" );
-   BOOST_REQUIRE_EQUAL( "alice1111111", info["owner"].as_string() );
+   info = get_producer_info( "alice11111" );
+   BOOST_REQUIRE_EQUAL( "alice11111", info["owner"].as_string() );
    BOOST_REQUIRE_EQUAL( key, fc::crypto::public_key(info["producer_key"].as_string()) );
    BOOST_REQUIRE_EQUAL( "http://block.two", info["url"].as_string() );
    BOOST_REQUIRE_EQUAL( 1, info["location"].as_int64() );
 
    auto key2 =  fc::crypto::public_key( std::string("EOS5jnmSKrzdBHE9n8hw58y7yxFWBC8SNiG7m8S1crJH3KvAnf9o6") );
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", key2 )
                                                ("url", "http://block.two")
                                                ("location", 2)
                         )
    );
-   info = get_producer_info( "alice1111111" );
-   BOOST_REQUIRE_EQUAL( "alice1111111", info["owner"].as_string() );
+   info = get_producer_info( "alice11111" );
+   BOOST_REQUIRE_EQUAL( "alice11111", info["owner"].as_string() );
    BOOST_REQUIRE_EQUAL( key2, fc::crypto::public_key(info["producer_key"].as_string()) );
    BOOST_REQUIRE_EQUAL( "http://block.two", info["url"].as_string() );
    BOOST_REQUIRE_EQUAL( 2, info["location"].as_int64() );
 
    //unregister producer
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(unregprod), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                         )
    );
-   info = get_producer_info( "alice1111111" );
+   info = get_producer_info( "alice11111" );
    //key should be empty
    BOOST_REQUIRE_EQUAL( fc::crypto::public_key(), fc::crypto::public_key(info["producer_key"].as_string()) );
    //everything else should stay the same
-   BOOST_REQUIRE_EQUAL( "alice1111111", info["owner"].as_string() );
+   BOOST_REQUIRE_EQUAL( "alice11111", info["owner"].as_string() );
    BOOST_REQUIRE_EQUAL( 0, info["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( "http://block.two", info["url"].as_string() );
 
    //unregister bob111111111 who is not a producer
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "producer not found" ),
                         push_action( N(bob111111111), N(unregprod), mvo()
-                                     ("producer",  "bob111111111")
+                                     ("producer",  "bob1111111")
                         )
    );
 
@@ -751,35 +751,35 @@ BOOST_FIXTURE_TEST_CASE( producer_register_unregister, eosio_system_tester ) try
 BOOST_FIXTURE_TEST_CASE( vote_for_producer, eosio_system_tester, * boost::unit_test::tolerance(1e+5) ) try {
    cross_15_percent_threshold();
 
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
    fc::variant params = producer_parameters_example(1);
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url", "http://block.one")
                                                ("location", 0 )
                         )
    );
-   auto prod = get_producer_info( "alice1111111" );
-   BOOST_REQUIRE_EQUAL( "alice1111111", prod["owner"].as_string() );
+   auto prod = get_producer_info( "alice11111" );
+   BOOST_REQUIRE_EQUAL( "alice11111", prod["owner"].as_string() );
    BOOST_REQUIRE_EQUAL( 0, prod["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( "http://block.one", prod["url"].as_string() );
 
-   issue( "bob111111111", core_from_string("2000.0000"),  config::system_account_name );
+   issue( "bob1111111", core_from_string("2000.0000"),  config::system_account_name );
    issue( "carol1111111", core_from_string("3000.0000"),  config::system_account_name );
 
    //bob111111111 makes stake
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("11.0000"), core_from_string("0.1111") ) );
-   BOOST_REQUIRE_EQUAL( core_from_string("1988.8889"), get_balance( "bob111111111" ) );
-   REQUIRE_MATCHING_OBJECT( voter( "bob111111111", core_from_string("11.1111") ), get_voter_info( "bob111111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("11.0000"), core_from_string("0.1111") ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1988.8889"), get_balance( "bob1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "bob1111111", core_from_string("11.1111") ), get_voter_info( "bob1111111" ) );
 
    //bob111111111 votes for alice1111111
    BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), { N(alice1111111) } ) );
 
    //check that producer parameters stay the same after voting
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("11.1111")) == prod["total_votes"].as_double() );
-   BOOST_REQUIRE_EQUAL( "alice1111111", prod["owner"].as_string() );
+   BOOST_REQUIRE_EQUAL( "alice11111", prod["owner"].as_string() );
    BOOST_REQUIRE_EQUAL( "http://block.one", prod["url"].as_string() );
 
    //carol1111111 makes stake
@@ -790,22 +790,22 @@ BOOST_FIXTURE_TEST_CASE( vote_for_producer, eosio_system_tester, * boost::unit_t
    BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), { N(alice1111111) } ) );
 
    //new stake votes be added to alice1111111's total_votes
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("33.3333")) == prod["total_votes"].as_double() );
 
    //bob111111111 increases his stake
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("33.0000"), core_from_string("0.3333") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("33.0000"), core_from_string("0.3333") ) );
    //alice1111111 stake with transfer to bob111111111
-   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "alice1111111", "bob111111111", core_from_string("22.0000"), core_from_string("0.2222") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "alice11111", "bob1111111", core_from_string("22.0000"), core_from_string("0.2222") ) );
    //should increase alice1111111's total_votes
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("88.8888")) == prod["total_votes"].as_double() );
 
    //carol1111111 unstakes part of the stake
    BOOST_REQUIRE_EQUAL( success(), unstake( "carol1111111", core_from_string("2.0000"), core_from_string("0.0002")/*"2.0000 EOS", "0.0002 EOS"*/ ) );
 
    //should decrease alice1111111's total_votes
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    wdump((prod));
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("86.8886")) == prod["total_votes"].as_double() );
 
@@ -813,15 +813,15 @@ BOOST_FIXTURE_TEST_CASE( vote_for_producer, eosio_system_tester, * boost::unit_t
    BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), vector<account_name>() ) );
 
    //should decrease alice1111111's total_votes
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("20.2220")) == prod["total_votes"].as_double() );
    //but eos should still be at stake
-   BOOST_REQUIRE_EQUAL( core_from_string("1955.5556"), get_balance( "bob111111111" ) );
+   BOOST_REQUIRE_EQUAL( core_from_string("1955.5556"), get_balance( "bob1111111" ) );
 
    //carol1111111 unstakes rest of eos
    BOOST_REQUIRE_EQUAL( success(), unstake( "carol1111111", core_from_string("20.0000"), core_from_string("0.2220") ) );
    //should decrease alice1111111's total_votes to zero
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( 0.0 == prod["total_votes"].as_double() );
 
    //carol1111111 should receive funds in 3 days
@@ -833,19 +833,19 @@ BOOST_FIXTURE_TEST_CASE( vote_for_producer, eosio_system_tester, * boost::unit_t
 
 
 BOOST_FIXTURE_TEST_CASE( unregistered_producer_voting, eosio_system_tester, * boost::unit_test::tolerance(1e+5) ) try {
-   issue( "bob111111111", core_from_string("2000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("13.0000"), core_from_string("0.5791") ) );
-   REQUIRE_MATCHING_OBJECT( voter( "bob111111111", core_from_string("13.5791") ), get_voter_info( "bob111111111" ) );
+   issue( "bob1111111", core_from_string("2000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("13.0000"), core_from_string("0.5791") ) );
+   REQUIRE_MATCHING_OBJECT( voter( "bob1111111", core_from_string("13.5791") ), get_voter_info( "bob1111111" ) );
 
    //bob111111111 should not be able to vote for alice1111111 who is not a producer
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "producer is not registered" ),
                         vote( N(bob111111111), { N(alice1111111) } ) );
 
    //alice1111111 registers as a producer
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
    fc::variant params = producer_parameters_example(1);
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url", "")
                                                ("location", 0)
@@ -853,11 +853,11 @@ BOOST_FIXTURE_TEST_CASE( unregistered_producer_voting, eosio_system_tester, * bo
    );
    //and then unregisters
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(unregprod), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                         )
    );
    //key should be empty
-   auto prod = get_producer_info( "alice1111111" );
+   auto prod = get_producer_info( "alice11111" );
    BOOST_REQUIRE_EQUAL( fc::crypto::public_key(), fc::crypto::public_key(prod["producer_key"].as_string()) );
 
    //bob111111111 should not be able to vote for alice1111111 who is an unregistered producer
@@ -868,9 +868,9 @@ BOOST_FIXTURE_TEST_CASE( unregistered_producer_voting, eosio_system_tester, * bo
 
 
 BOOST_FIXTURE_TEST_CASE( more_than_30_producer_voting, eosio_system_tester ) try {
-   issue( "bob111111111", core_from_string("2000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("13.0000"), core_from_string("0.5791") ) );
-   REQUIRE_MATCHING_OBJECT( voter( "bob111111111", core_from_string("13.5791") ), get_voter_info( "bob111111111" ) );
+   issue( "bob1111111", core_from_string("2000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("13.0000"), core_from_string("0.5791") ) );
+   REQUIRE_MATCHING_OBJECT( voter( "bob1111111", core_from_string("13.5791") ), get_voter_info( "bob1111111" ) );
 
    //bob111111111 should not be able to vote for alice1111111 who is not a producer
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "attempt to vote for too many producers" ),
@@ -880,15 +880,15 @@ BOOST_FIXTURE_TEST_CASE( more_than_30_producer_voting, eosio_system_tester ) try
 
 
 BOOST_FIXTURE_TEST_CASE( vote_same_producer_30_times, eosio_system_tester ) try {
-   issue( "bob111111111", core_from_string("2000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("50.0000"), core_from_string("50.0000") ) );
-   REQUIRE_MATCHING_OBJECT( voter( "bob111111111", core_from_string("100.0000") ), get_voter_info( "bob111111111" ) );
+   issue( "bob1111111", core_from_string("2000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("50.0000"), core_from_string("50.0000") ) );
+   REQUIRE_MATCHING_OBJECT( voter( "bob1111111", core_from_string("100.0000") ), get_voter_info( "bob1111111" ) );
 
    //alice1111111 becomes a producer
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
    fc::variant params = producer_parameters_example(1);
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key(N(alice1111111), "active") )
                                                ("url", "")
                                                ("location", 0)
@@ -899,18 +899,18 @@ BOOST_FIXTURE_TEST_CASE( vote_same_producer_30_times, eosio_system_tester ) try 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "producer votes must be unique and sorted" ),
                         vote( N(bob111111111), vector<account_name>(30, N(alice1111111)) ) );
 
-   auto prod = get_producer_info( "alice1111111" );
+   auto prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( 0 == prod["total_votes"].as_double() );
 
 } FC_LOG_AND_RETHROW()
 
 
 BOOST_FIXTURE_TEST_CASE( producer_keep_votes, eosio_system_tester, * boost::unit_test::tolerance(1e+5) ) try {
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
    fc::variant params = producer_parameters_example(1);
    vector<char> key = fc::raw::pack( get_public_key( N(alice1111111), "active" ) );
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url", "")
                                                ("location", 0)
@@ -918,22 +918,22 @@ BOOST_FIXTURE_TEST_CASE( producer_keep_votes, eosio_system_tester, * boost::unit
    );
 
    //bob111111111 makes stake
-   issue( "bob111111111", core_from_string("2000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("13.0000"), core_from_string("0.5791") ) );
-   REQUIRE_MATCHING_OBJECT( voter( "bob111111111", core_from_string("13.5791") ), get_voter_info( "bob111111111" ) );
+   issue( "bob1111111", core_from_string("2000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("13.0000"), core_from_string("0.5791") ) );
+   REQUIRE_MATCHING_OBJECT( voter( "bob1111111", core_from_string("13.5791") ), get_voter_info( "bob1111111" ) );
 
    //bob111111111 votes for alice1111111
    BOOST_REQUIRE_EQUAL( success(), vote(N(bob111111111), { N(alice1111111) } ) );
 
-   auto prod = get_producer_info( "alice1111111" );
+   auto prod = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("13.5791")) == prod["total_votes"].as_double() );
 
    //unregister producer
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(unregprod), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                         )
    );
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    //key should be empty
    BOOST_REQUIRE_EQUAL( fc::crypto::public_key(), fc::crypto::public_key(prod["producer_key"].as_string()) );
    //check parameters just in case
@@ -944,26 +944,26 @@ BOOST_FIXTURE_TEST_CASE( producer_keep_votes, eosio_system_tester, * boost::unit
    //regtister the same producer again
    params = producer_parameters_example(2);
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url", "")
                                                ("location", 0)
                         )
    );
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    //votes should stay the same
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("13.5791")), prod["total_votes"].as_double() );
 
    //change parameters
    params = producer_parameters_example(3);
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url","")
                                                ("location", 0)
                         )
    );
-   prod = get_producer_info( "alice1111111" );
+   prod = get_producer_info( "alice11111" );
    //votes should stay the same
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("13.5791")), prod["total_votes"].as_double() );
    //check parameters just in case
@@ -977,7 +977,7 @@ BOOST_FIXTURE_TEST_CASE( vote_for_two_producers, eosio_system_tester, * boost::u
    fc::variant params = producer_parameters_example(1);
    auto key = get_public_key( N(alice1111111), "active" );
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproducer), mvo()
-                                               ("producer",  "alice1111111")
+                                               ("producer",  "alice11111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url","")
                                                ("location", 0)
@@ -987,7 +987,7 @@ BOOST_FIXTURE_TEST_CASE( vote_for_two_producers, eosio_system_tester, * boost::u
    params = producer_parameters_example(2);
    key = get_public_key( N(bob111111111), "active" );
    BOOST_REQUIRE_EQUAL( success(), push_action( N(bob111111111), N(regproducer), mvo()
-                                               ("producer",  "bob111111111")
+                                               ("producer",  "bob1111111")
                                                ("producer_key", get_public_key( N(alice1111111), "active") )
                                                ("url","")
                                                ("location", 0)
@@ -999,28 +999,28 @@ BOOST_FIXTURE_TEST_CASE( vote_for_two_producers, eosio_system_tester, * boost::u
    BOOST_REQUIRE_EQUAL( success(), stake( "carol1111111", core_from_string("15.0005"), core_from_string("5.0000") ) );
    BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), { N(alice1111111), N(bob111111111) } ) );
 
-   auto alice_info = get_producer_info( "alice1111111" );
+   auto alice_info = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("20.0005")) == alice_info["total_votes"].as_double() );
-   auto bob_info = get_producer_info( "bob111111111" );
+   auto bob_info = get_producer_info( "bob1111111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("20.0005")) == bob_info["total_votes"].as_double() );
 
    //carol1111111 votes for alice1111111 (but revokes vote for bob111111111)
    BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), { N(alice1111111) } ) );
 
-   alice_info = get_producer_info( "alice1111111" );
+   alice_info = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("20.0005")) == alice_info["total_votes"].as_double() );
-   bob_info = get_producer_info( "bob111111111" );
+   bob_info = get_producer_info( "bob1111111" );
    BOOST_TEST_REQUIRE( 0 == bob_info["total_votes"].as_double() );
 
    //alice1111111 votes for herself and bob111111111
-   issue( "alice1111111", core_from_string("2.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("1.0000"), core_from_string("1.0000") ) );
+   issue( "alice11111", core_from_string("2.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("1.0000"), core_from_string("1.0000") ) );
    BOOST_REQUIRE_EQUAL( success(), vote(N(alice1111111), { N(alice1111111), N(bob111111111) } ) );
 
-   alice_info = get_producer_info( "alice1111111" );
+   alice_info = get_producer_info( "alice11111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("22.0005")) == alice_info["total_votes"].as_double() );
 
-   bob_info = get_producer_info( "bob111111111" );
+   bob_info = get_producer_info( "bob1111111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("2.0000")) == bob_info["total_votes"].as_double() );
 
 } FC_LOG_AND_RETHROW()
@@ -1029,36 +1029,36 @@ BOOST_FIXTURE_TEST_CASE( vote_for_two_producers, eosio_system_tester, * boost::u
 BOOST_FIXTURE_TEST_CASE( proxy_register_unregister_keeps_stake, eosio_system_tester ) try {
    //register proxy by first action for this user ever
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproxy), mvo()
-                                               ("proxy",  "alice1111111")
+                                               ("proxy",  "alice11111")
                                                ("isproxy", true )
                         )
    );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" ), get_voter_info( "alice11111" ) );
 
    //unregister proxy
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproxy), mvo()
-                                               ("proxy",  "alice1111111")
+                                               ("proxy",  "alice11111")
                                                ("isproxy", false)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111" ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111" ), get_voter_info( "alice11111" ) );
 
    //stake and then register as a proxy
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("200.0002"), core_from_string("100.0001") ) );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("200.0002"), core_from_string("100.0001") ) );
    BOOST_REQUIRE_EQUAL( success(), push_action( N(bob111111111), N(regproxy), mvo()
-                                               ("proxy",  "bob111111111")
+                                               ("proxy",  "bob1111111")
                                                ("isproxy", true)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( proxy( "bob111111111" )( "staked", 3000003 ), get_voter_info( "bob111111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "bob1111111" )( "staked", 3000003 ), get_voter_info( "bob1111111" ) );
    //unrgister and check that stake is still in place
    BOOST_REQUIRE_EQUAL( success(), push_action( N(bob111111111), N(regproxy), mvo()
-                                               ("proxy",  "bob111111111")
+                                               ("proxy",  "bob1111111")
                                                ("isproxy", false)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( voter( "bob111111111", core_from_string("300.0003") ), get_voter_info( "bob111111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "bob1111111", core_from_string("300.0003") ), get_voter_info( "bob1111111" ) );
 
    //register as a proxy and then stake
    BOOST_REQUIRE_EQUAL( success(), push_action( N(carol1111111), N(regproxy), mvo()
@@ -1086,30 +1086,30 @@ BOOST_FIXTURE_TEST_CASE( proxy_stake_unstake_keeps_proxy_flag, eosio_system_test
    cross_15_percent_threshold();
 
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                               ("proxy",  "alice1111111")
+                                               ("proxy",  "alice11111")
                                                ("isproxy", true)
                         )
    );
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" ), get_voter_info( "alice1111111" ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" ), get_voter_info( "alice11111" ) );
 
    //stake
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("100.0000"), core_from_string("50.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("100.0000"), core_from_string("50.0000") ) );
    //check that account is still a proxy
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )( "staked", 1500000 ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )( "staked", 1500000 ), get_voter_info( "alice11111" ) );
 
    //stake more
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("30.0000"), core_from_string("20.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("30.0000"), core_from_string("20.0000") ) );
    //check that account is still a proxy
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )("staked", 2000000 ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )("staked", 2000000 ), get_voter_info( "alice11111" ) );
 
    //unstake more
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", core_from_string("65.0000"), core_from_string("35.0000") ) );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )("staked", 1000000 ), get_voter_info( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", core_from_string("65.0000"), core_from_string("35.0000") ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )("staked", 1000000 ), get_voter_info( "alice11111" ) );
 
    //unstake the rest
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", core_from_string("65.0000"), core_from_string("35.0000") ) );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )( "staked", 0 ), get_voter_info( "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", core_from_string("65.0000"), core_from_string("35.0000") ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )( "staked", 0 ), get_voter_info( "alice11111" ) );
 
 } FC_LOG_AND_RETHROW()
 
@@ -1124,16 +1124,16 @@ BOOST_FIXTURE_TEST_CASE( proxy_actions_affect_producers, eosio_system_tester, * 
 
    //register as a proxy
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy", true)
                         )
    );
 
    //accumulate proxied votes
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
    BOOST_REQUIRE_EQUAL( success(), vote(N(bob111111111), vector<account_name>(), N(alice1111111) ) );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) ), get_voter_info( "alice11111" ) );
 
    //vote for producers
    BOOST_REQUIRE_EQUAL( success(), vote(N(alice1111111), { N(defproducer1), N(defproducer2) } ) );
@@ -1149,18 +1149,18 @@ BOOST_FIXTURE_TEST_CASE( proxy_actions_affect_producers, eosio_system_tester, * 
 
    //unregister proxy
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy", false)
                         )
    );
-   //REQUIRE_MATCHING_OBJECT( voter( "alice1111111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) ), get_voter_info( "alice1111111" ) );
+   //REQUIRE_MATCHING_OBJECT( voter( "alice11111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) ), get_voter_info( "alice11111" ) );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer3" )["total_votes"].as_double() );
 
    //register proxy again
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy", true)
                         )
    );
@@ -1169,14 +1169,14 @@ BOOST_FIXTURE_TEST_CASE( proxy_actions_affect_producers, eosio_system_tester, * 
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("150.0003")) == get_producer_info( "defproducer3" )["total_votes"].as_double() );
 
    //stake increase by proxy itself affects producers
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("30.0001"), core_from_string("20.0001") ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("30.0001"), core_from_string("20.0001") ) );
    BOOST_REQUIRE_EQUAL( stake2votes(core_from_string("200.0005")), get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( stake2votes(core_from_string("200.0005")), get_producer_info( "defproducer3" )["total_votes"].as_double() );
 
    //stake decrease by proxy itself affects producers
-   BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", core_from_string("10.0001"), core_from_string("10.0001") ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "alice11111", core_from_string("10.0001"), core_from_string("10.0001") ) );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("180.0003")) == get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("180.0003")) == get_producer_info( "defproducer3" )["total_votes"].as_double() );
@@ -1216,7 +1216,7 @@ BOOST_FIXTURE_TEST_CASE(producer_pay, eosio_system_tester, * boost::unit_test::t
       const uint64_t initial_claim_time        = initial_global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  initial_pervote_bucket    = initial_global_state["pervote_bucket"].as<int64_t>();
       const int64_t  initial_perblock_bucket   = initial_global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  initial_savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  initial_savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t initial_tot_unpaid_blocks = initial_global_state["total_unpaid_blocks"].as<uint32_t>();
 
       prod = get_producer_info("defproducera");
@@ -1235,7 +1235,7 @@ BOOST_FIXTURE_TEST_CASE(producer_pay, eosio_system_tester, * boost::unit_test::t
       const uint64_t claim_time        = global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  pervote_bucket    = global_state["pervote_bucket"].as<int64_t>();
       const int64_t  perblock_bucket   = global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t tot_unpaid_blocks = global_state["total_unpaid_blocks"].as<uint32_t>();
 
       prod = get_producer_info("defproducera");
@@ -1293,7 +1293,7 @@ BOOST_FIXTURE_TEST_CASE(producer_pay, eosio_system_tester, * boost::unit_test::t
       const uint64_t initial_claim_time        = initial_global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  initial_pervote_bucket    = initial_global_state["pervote_bucket"].as<int64_t>();
       const int64_t  initial_perblock_bucket   = initial_global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  initial_savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  initial_savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t initial_tot_unpaid_blocks = initial_global_state["total_unpaid_blocks"].as<uint32_t>();
       const double   initial_tot_vote_weight   = initial_global_state["total_producer_vote_weight"].as<double>();
 
@@ -1316,7 +1316,7 @@ BOOST_FIXTURE_TEST_CASE(producer_pay, eosio_system_tester, * boost::unit_test::t
       const uint64_t claim_time        = global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  pervote_bucket    = global_state["pervote_bucket"].as<int64_t>();
       const int64_t  perblock_bucket   = global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t tot_unpaid_blocks = global_state["total_unpaid_blocks"].as<uint32_t>();
 
       prod = get_producer_info("defproducera");
@@ -1357,7 +1357,7 @@ BOOST_FIXTURE_TEST_CASE(producer_pay, eosio_system_tester, * boost::unit_test::t
       regproducer(N(defproducerb));
       regproducer(N(defproducerc));
       const asset   initial_supply  = get_token_supply();
-      const int64_t initial_savings = get_balance(N(eosio.saving)).get_amount();
+      const int64_t initial_savings = get_balance(N(BE.saving)).get_amount();
       for (uint32_t i = 0; i < 7 * 52; ++i) {
          produce_block(fc::seconds(8 * 3600));
          BOOST_REQUIRE_EQUAL(success(), push_action(N(defproducerc), N(claimrewards), mvo()("owner", "defproducerc")));
@@ -1367,7 +1367,7 @@ BOOST_FIXTURE_TEST_CASE(producer_pay, eosio_system_tester, * boost::unit_test::t
          BOOST_REQUIRE_EQUAL(success(), push_action(N(defproducera), N(claimrewards), mvo()("owner", "defproducera")));
       }
       const asset   supply  = get_token_supply();
-      const int64_t savings = get_balance(N(eosio.saving)).get_amount();
+      const int64_t savings = get_balance(N(BE.saving)).get_amount();
       // Amount issued per year is very close to the 5% inflation target. Small difference (500 tokens out of 50'000'000 issued)
       // is due to compounding every 8 hours in this test as opposed to theoretical continuous compounding
       BOOST_REQUIRE(500 * 10000 > int64_t(double(initial_supply.get_amount()) * double(0.05)) - (supply.get_amount() - initial_supply.get_amount()));
@@ -1492,11 +1492,11 @@ BOOST_FIXTURE_TEST_CASE(multiple_producer_pay, eosio_system_tester, * boost::uni
       const uint64_t initial_claim_time        = initial_global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  initial_pervote_bucket    = initial_global_state["pervote_bucket"].as<int64_t>();
       const int64_t  initial_perblock_bucket   = initial_global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  initial_savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  initial_savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t initial_tot_unpaid_blocks = initial_global_state["total_unpaid_blocks"].as<uint32_t>();
       const asset    initial_supply            = get_token_supply();
-      const asset    initial_bpay_balance      = get_balance(N(eosio.bpay));
-      const asset    initial_vpay_balance      = get_balance(N(eosio.vpay));
+      const asset    initial_bpay_balance      = get_balance(N(BE.bpay));
+      const asset    initial_vpay_balance      = get_balance(N(BE.vpay));
       const asset    initial_balance           = get_balance(prod_name);
       const uint32_t initial_unpaid_blocks     = get_producer_info(prod_name)["unpaid_blocks"].as<uint32_t>();
 
@@ -1506,11 +1506,11 @@ BOOST_FIXTURE_TEST_CASE(multiple_producer_pay, eosio_system_tester, * boost::uni
       const uint64_t claim_time        = global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  pervote_bucket    = global_state["pervote_bucket"].as<int64_t>();
       const int64_t  perblock_bucket   = global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t tot_unpaid_blocks = global_state["total_unpaid_blocks"].as<uint32_t>();
       const asset    supply            = get_token_supply();
-      const asset    bpay_balance      = get_balance(N(eosio.bpay));
-      const asset    vpay_balance      = get_balance(N(eosio.vpay));
+      const asset    bpay_balance      = get_balance(N(BE.bpay));
+      const asset    vpay_balance      = get_balance(N(BE.vpay));
       const asset    balance           = get_balance(prod_name);
       const uint32_t unpaid_blocks     = get_producer_info(prod_name)["unpaid_blocks"].as<uint32_t>();
 
@@ -1568,11 +1568,11 @@ BOOST_FIXTURE_TEST_CASE(multiple_producer_pay, eosio_system_tester, * boost::uni
       const uint64_t initial_claim_time        = initial_global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  initial_pervote_bucket    = initial_global_state["pervote_bucket"].as<int64_t>();
       const int64_t  initial_perblock_bucket   = initial_global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  initial_savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  initial_savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t initial_tot_unpaid_blocks = initial_global_state["total_unpaid_blocks"].as<uint32_t>();
       const asset    initial_supply            = get_token_supply();
-      const asset    initial_bpay_balance      = get_balance(N(eosio.bpay));
-      const asset    initial_vpay_balance      = get_balance(N(eosio.vpay));
+      const asset    initial_bpay_balance      = get_balance(N(BE.bpay));
+      const asset    initial_vpay_balance      = get_balance(N(BE.vpay));
       const asset    initial_balance           = get_balance(prod_name);
       const uint32_t initial_unpaid_blocks     = get_producer_info(prod_name)["unpaid_blocks"].as<uint32_t>();
 
@@ -1582,11 +1582,11 @@ BOOST_FIXTURE_TEST_CASE(multiple_producer_pay, eosio_system_tester, * boost::uni
       const uint64_t claim_time        = global_state["last_pervote_bucket_fill"].as_uint64();
       const int64_t  pervote_bucket    = global_state["pervote_bucket"].as<int64_t>();
       const int64_t  perblock_bucket   = global_state["perblock_bucket"].as<int64_t>();
-      const int64_t  savings           = get_balance(N(eosio.saving)).get_amount();
+      const int64_t  savings           = get_balance(N(BE.saving)).get_amount();
       const uint32_t tot_unpaid_blocks = global_state["total_unpaid_blocks"].as<uint32_t>();
       const asset    supply            = get_token_supply();
-      const asset    bpay_balance      = get_balance(N(eosio.bpay));
-      const asset    vpay_balance      = get_balance(N(eosio.vpay));
+      const asset    bpay_balance      = get_balance(N(BE.bpay));
+      const asset    vpay_balance      = get_balance(N(BE.vpay));
       const asset    balance           = get_balance(prod_name);
       const uint32_t unpaid_blocks     = get_producer_info(prod_name)["unpaid_blocks"].as<uint32_t>();
 
@@ -1692,7 +1692,7 @@ BOOST_FIXTURE_TEST_CASE(producers_upgrade_system_contract, eosio_system_tester) 
          string action_type_name = msig_abi_ser.get_action_type(name);
 
          action act;
-         act.account = N(eosio.msig);
+         act.account = N(BE.msig);
          act.name = name;
          act.data = msig_abi_ser.variant_to_binary( action_type_name, data );
 
@@ -1737,7 +1737,7 @@ BOOST_FIXTURE_TEST_CASE(producers_upgrade_system_contract, eosio_system_tester) 
    }
 
    BOOST_REQUIRE_EQUAL(success(), push_action_msig( N(alice1111111), N(propose), mvo()
-                                                    ("proposer",      "alice1111111")
+                                                    ("proposer",      "alice11111")
                                                     ("proposal_name", "upgrade1")
                                                     ("trx",           trx)
                                                     ("requested", prod_perms)
@@ -1747,7 +1747,7 @@ BOOST_FIXTURE_TEST_CASE(producers_upgrade_system_contract, eosio_system_tester) 
    // get 15 approvals
    for ( size_t i = 0; i < 14; ++i ) {
       BOOST_REQUIRE_EQUAL(success(), push_action_msig( name(producer_names[i]), N(approve), mvo()
-                                                       ("proposer",      "alice1111111")
+                                                       ("proposer",      "alice11111")
                                                        ("proposal_name", "upgrade1")
                                                        ("level",         permission_level{ name(producer_names[i]), config::active_name })
                           )
@@ -1757,15 +1757,15 @@ BOOST_FIXTURE_TEST_CASE(producers_upgrade_system_contract, eosio_system_tester) 
    //should fail
    BOOST_REQUIRE_EQUAL(wasm_assert_msg("transaction authorization failed"),
                        push_action_msig( N(alice1111111), N(exec), mvo()
-                                         ("proposer",      "alice1111111")
+                                         ("proposer",      "alice11111")
                                          ("proposal_name", "upgrade1")
-                                         ("executer",      "alice1111111")
+                                         ("executer",      "alice11111")
                        )
    );
 
    // one more approval
    BOOST_REQUIRE_EQUAL(success(), push_action_msig( name(producer_names[14]), N(approve), mvo()
-                                                    ("proposer",      "alice1111111")
+                                                    ("proposer",      "alice11111")
                                                     ("proposal_name", "upgrade1")
                                                     ("level",         permission_level{ name(producer_names[14]), config::active_name })
                           )
@@ -1774,9 +1774,9 @@ BOOST_FIXTURE_TEST_CASE(producers_upgrade_system_contract, eosio_system_tester) 
    transaction_trace_ptr trace;
    control->applied_transaction.connect([&]( const transaction_trace_ptr& t) { if (t->scheduled) { trace = t; } } );
    BOOST_REQUIRE_EQUAL(success(), push_action_msig( N(alice1111111), N(exec), mvo()
-                                                    ("proposer",      "alice1111111")
+                                                    ("proposer",      "alice11111")
                                                     ("proposal_name", "upgrade1")
-                                                    ("executer",      "alice1111111")
+                                                    ("executer",      "alice11111")
                        )
    );
 
@@ -1893,15 +1893,15 @@ BOOST_FIXTURE_TEST_CASE( voters_actions_affect_proxy_and_producers, eosio_system
 
    //alice1111111 becomes a producer
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy", true)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" ), get_voter_info( "alice11111" ) );
 
    //alice1111111 makes stake and votes
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("30.0001"), core_from_string("20.0001") ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("30.0001"), core_from_string("20.0001") ) );
    BOOST_REQUIRE_EQUAL( success(), vote( N(alice1111111), { N(defproducer1), N(defproducer2) } ) );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("50.0002")) == get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("50.0002")) == get_producer_info( "defproducer2" )["total_votes"].as_double() );
@@ -1915,10 +1915,10 @@ BOOST_FIXTURE_TEST_CASE( voters_actions_affect_proxy_and_producers, eosio_system
    REQUIRE_MATCHING_OBJECT( proxy( "donald111111" ), get_voter_info( "donald111111" ) );
 
    //bob111111111 chooses alice1111111 as a proxy
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
-   BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), vector<account_name>(), "alice1111111" ) );
-   BOOST_TEST_REQUIRE( stake2votes(core_from_string("150.0003")) == get_voter_info( "alice1111111" )["proxied_vote_weight"].as_double() );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
+   BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), vector<account_name>(), "alice11111" ) );
+   BOOST_TEST_REQUIRE( stake2votes(core_from_string("150.0003")) == get_voter_info( "alice11111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("200.0005")) == get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("200.0005")) == get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer3" )["total_votes"].as_double() );
@@ -1926,29 +1926,29 @@ BOOST_FIXTURE_TEST_CASE( voters_actions_affect_proxy_and_producers, eosio_system
    //carol1111111 chooses alice1111111 as a proxy
    issue( "carol1111111", core_from_string("1000.0000"),  config::system_account_name );
    BOOST_REQUIRE_EQUAL( success(), stake( "carol1111111", core_from_string("30.0001"), core_from_string("20.0001") ) );
-   BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), vector<account_name>(), "alice1111111" ) );
-   BOOST_TEST_REQUIRE( stake2votes(core_from_string("200.0005")) == get_voter_info( "alice1111111" )["proxied_vote_weight"].as_double() );
+   BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), vector<account_name>(), "alice11111" ) );
+   BOOST_TEST_REQUIRE( stake2votes(core_from_string("200.0005")) == get_voter_info( "alice11111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("250.0007")) == get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("250.0007")) == get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer3" )["total_votes"].as_double() );
 
    //proxied voter carol1111111 increases stake
    BOOST_REQUIRE_EQUAL( success(), stake( "carol1111111", core_from_string("50.0000"), core_from_string("70.0000") ) );
-   BOOST_TEST_REQUIRE( stake2votes(core_from_string("320.0005")) == get_voter_info( "alice1111111" )["proxied_vote_weight"].as_double() );
+   BOOST_TEST_REQUIRE( stake2votes(core_from_string("320.0005")) == get_voter_info( "alice11111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("370.0007")) == get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("370.0007")) == get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer3" )["total_votes"].as_double() );
 
    //proxied voter bob111111111 decreases stake
-   BOOST_REQUIRE_EQUAL( success(), unstake( "bob111111111", core_from_string("50.0001"), core_from_string("50.0001") ) );
-   BOOST_TEST_REQUIRE( stake2votes(core_from_string("220.0003")) == get_voter_info( "alice1111111" )["proxied_vote_weight"].as_double() );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "bob1111111", core_from_string("50.0001"), core_from_string("50.0001") ) );
+   BOOST_TEST_REQUIRE( stake2votes(core_from_string("220.0003")) == get_voter_info( "alice11111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("270.0005")) == get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("270.0005")) == get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_REQUIRE_EQUAL( 0, get_producer_info( "defproducer3" )["total_votes"].as_double() );
 
    //proxied voter carol1111111 chooses another proxy
    BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), vector<account_name>(), "donald111111" ) );
-   BOOST_TEST_REQUIRE( stake2votes(core_from_string("50.0001")), get_voter_info( "alice1111111" )["proxied_vote_weight"].as_double() );
+   BOOST_TEST_REQUIRE( stake2votes(core_from_string("50.0001")), get_voter_info( "alice11111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("170.0002")), get_voter_info( "donald111111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("100.0003")), get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("100.0003")), get_producer_info( "defproducer2" )["total_votes"].as_double() );
@@ -1956,7 +1956,7 @@ BOOST_FIXTURE_TEST_CASE( voters_actions_affect_proxy_and_producers, eosio_system
 
    //bob111111111 switches to direct voting and votes for one of the same producers, but not for another one
    BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), { N(defproducer2) } ) );
-   BOOST_TEST_REQUIRE( 0.0 == get_voter_info( "alice1111111" )["proxied_vote_weight"].as_double() );
+   BOOST_TEST_REQUIRE( 0.0 == get_voter_info( "alice11111" )["proxied_vote_weight"].as_double() );
    BOOST_TEST_REQUIRE(  stake2votes(core_from_string("50.0002")), get_producer_info( "defproducer1" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("100.0003")), get_producer_info( "defproducer2" )["total_votes"].as_double() );
    BOOST_TEST_REQUIRE( 0.0 == get_producer_info( "defproducer3" )["total_votes"].as_double() );
@@ -1967,33 +1967,33 @@ BOOST_FIXTURE_TEST_CASE( voters_actions_affect_proxy_and_producers, eosio_system
 BOOST_FIXTURE_TEST_CASE( vote_both_proxy_and_producers, eosio_system_tester ) try {
    //alice1111111 becomes a proxy
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy", true)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" ), get_voter_info( "alice11111" ) );
 
    //carol1111111 becomes a producer
    BOOST_REQUIRE_EQUAL( success(), regproducer( "carol1111111", 1) );
 
    //bob111111111 chooses alice1111111 as a proxy
 
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("cannot vote for producers and proxy at same time"),
-                        vote( N(bob111111111), { N(carol1111111) }, "alice1111111" ) );
+                        vote( N(bob111111111), { N(carol1111111) }, "alice11111" ) );
 
 } FC_LOG_AND_RETHROW()
 
 
 BOOST_FIXTURE_TEST_CASE( select_invalid_proxy, eosio_system_tester ) try {
    //accumulate proxied votes
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
 
    //selecting account not registered as a proxy
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "invalid proxy specified" ),
-                        vote( N(bob111111111), vector<account_name>(), "alice1111111" ) );
+                        vote( N(bob111111111), vector<account_name>(), "alice11111" ) );
 
    //selecting not existing account as a proxy
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "invalid proxy specified" ),
@@ -2005,46 +2005,46 @@ BOOST_FIXTURE_TEST_CASE( select_invalid_proxy, eosio_system_tester ) try {
 BOOST_FIXTURE_TEST_CASE( double_register_unregister_proxy_keeps_votes, eosio_system_tester ) try {
    //alice1111111 becomes a proxy
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy",  1)
                         )
    );
-   issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", core_from_string("5.0000"), core_from_string("5.0000") ) );
-   edump((get_voter_info("alice1111111")));
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )( "staked", 100000 ), get_voter_info( "alice1111111" ) );
+   issue( "alice11111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", core_from_string("5.0000"), core_from_string("5.0000") ) );
+   edump((get_voter_info("alice11111")));
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )( "staked", 100000 ), get_voter_info( "alice11111" ) );
 
    //bob111111111 stakes and selects alice1111111 as a proxy
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
-   BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), vector<account_name>(), "alice1111111" ) );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )( "proxied_vote_weight", stake2votes( core_from_string("150.0003") ))( "staked", 100000 ), get_voter_info( "alice1111111" ) );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
+   BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), vector<account_name>(), "alice11111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )( "proxied_vote_weight", stake2votes( core_from_string("150.0003") ))( "staked", 100000 ), get_voter_info( "alice11111" ) );
 
    //double regestering should fail without affecting total votes and stake
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "action has no effect" ),
                         push_action( N(alice1111111), N(regproxy), mvo()
-                                     ("proxy",  "alice1111111")
+                                     ("proxy",  "alice11111")
                                      ("isproxy",  1)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( proxy( "alice1111111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) )( "staked", 100000 ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( proxy( "alice11111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) )( "staked", 100000 ), get_voter_info( "alice11111" ) );
 
    //uregister
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy",  0)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) )( "staked", 100000 ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")) )( "staked", 100000 ), get_voter_info( "alice11111" ) );
 
    //double unregistering should not affect proxied_votes and stake
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "action has no effect" ),
                         push_action( N(alice1111111), N(regproxy), mvo()
-                                     ("proxy",  "alice1111111")
+                                     ("proxy",  "alice11111")
                                      ("isproxy",  0)
                         )
    );
-   REQUIRE_MATCHING_OBJECT( voter( "alice1111111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")))( "staked", 100000 ), get_voter_info( "alice1111111" ) );
+   REQUIRE_MATCHING_OBJECT( voter( "alice11111" )( "proxied_vote_weight", stake2votes(core_from_string("150.0003")))( "staked", 100000 ), get_voter_info( "alice11111" ) );
 
 } FC_LOG_AND_RETHROW()
 
@@ -2052,28 +2052,28 @@ BOOST_FIXTURE_TEST_CASE( double_register_unregister_proxy_keeps_votes, eosio_sys
 BOOST_FIXTURE_TEST_CASE( proxy_cannot_use_another_proxy, eosio_system_tester ) try {
    //alice1111111 becomes a proxy
    BOOST_REQUIRE_EQUAL( success(), push_action( N(alice1111111), N(regproxy), mvo()
-                                                ("proxy",  "alice1111111")
+                                                ("proxy",  "alice11111")
                                                 ("isproxy",  1)
                         )
    );
 
    //bob111111111 becomes a proxy
    BOOST_REQUIRE_EQUAL( success(), push_action( N(bob111111111), N(regproxy), mvo()
-                                                ("proxy",  "bob111111111")
+                                                ("proxy",  "bob1111111")
                                                 ("isproxy",  1)
                         )
    );
 
    //proxy should not be able to use a proxy
-   issue( "bob111111111", core_from_string("1000.0000"),  config::system_account_name );
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
+   issue( "bob1111111", core_from_string("1000.0000"),  config::system_account_name );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "account registered as a proxy is not allowed to use a proxy" ),
-                        vote( N(bob111111111), vector<account_name>(), "alice1111111" ) );
+                        vote( N(bob111111111), vector<account_name>(), "alice11111" ) );
 
    //voter that uses a proxy should not be allowed to become a proxy
    issue( "carol1111111", core_from_string("1000.0000"),  config::system_account_name );
    BOOST_REQUIRE_EQUAL( success(), stake( "carol1111111", core_from_string("100.0002"), core_from_string("50.0001") ) );
-   BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), vector<account_name>(), "alice1111111" ) );
+   BOOST_REQUIRE_EQUAL( success(), vote( N(carol1111111), vector<account_name>(), "alice11111" ) );
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "account that uses a proxy is not allowed to become a proxy" ),
                         push_action( N(carol1111111), N(regproxy), mvo()
                                      ("proxy",  "carol1111111")
@@ -2083,7 +2083,7 @@ BOOST_FIXTURE_TEST_CASE( proxy_cannot_use_another_proxy, eosio_system_tester ) t
 
    //proxy should not be able to use itself as a proxy
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "cannot proxy to self" ),
-                        vote( N(bob111111111), vector<account_name>(), "bob111111111" ) );
+                        vote( N(bob111111111), vector<account_name>(), "bob1111111" ) );
 
 } FC_LOG_AND_RETHROW()
 
@@ -2114,8 +2114,8 @@ BOOST_FIXTURE_TEST_CASE( elect_producers /*_and_parameters*/, eosio_system_teste
    BOOST_REQUIRE_EQUAL( success(), regproducer( "defproducer3", 3) );
 
    //stake more than 15% of total EOS supply to activate chain
-   transfer( "eosio", "alice1111111", core_from_string("600000000.0000"), "eosio" );
-   BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
+   transfer( "BE", "alice11111", core_from_string("600000000.0000"), "BE" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
    //vote for producers
    BOOST_REQUIRE_EQUAL( success(), vote( N(alice1111111), { N(defproducer1) } ) );
    produce_blocks(250);
@@ -2128,9 +2128,9 @@ BOOST_FIXTURE_TEST_CASE( elect_producers /*_and_parameters*/, eosio_system_teste
    //REQUIRE_EQUAL_OBJECTS(prod1_config, config);
 
    // elect 2 producers
-   issue( "bob111111111", core_from_string("80000.0000"),  config::system_account_name );
+   issue( "bob1111111", core_from_string("80000.0000"),  config::system_account_name );
    ilog("stake");
-   BOOST_REQUIRE_EQUAL( success(), stake( "bob111111111", core_from_string("40000.0000"), core_from_string("40000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "bob1111111", core_from_string("40000.0000"), core_from_string("40000.0000") ) );
    ilog("start vote");
    BOOST_REQUIRE_EQUAL( success(), vote( N(bob111111111), { N(defproducer2) } ) );
    ilog(".");
@@ -2202,7 +2202,7 @@ BOOST_FIXTURE_TEST_CASE( buyname, eosio_system_tester ) try {
    //wlog( "verify sam can create nofail" );
    create_accounts_with_resources( { N(nofail) }, N(sam) ); // sam should be able to do this, he won the bid
    //wlog( "verify nofail can create test.nofail" );
-   transfer( "eosio", "nofail", core_from_string( "1000.0000" ) );
+   transfer( "BE", "nofail", core_from_string( "1000.0000" ) );
    create_accounts_with_resources( { N(test.nofail) }, N(nofail) ); // only nofail can create test.nofail
    //wlog( "verify dan cannot create test.fail" );
    BOOST_REQUIRE_EXCEPTION( create_accounts_with_resources( { N(test.fail) }, N(dan) ), // dan shouldn't be able to do this
@@ -2268,12 +2268,12 @@ BOOST_FIXTURE_TEST_CASE( multiple_namebids, eosio_system_tester ) try {
 
    // alice outbids bob on prefb
    {
-      const asset initial_names_balance = get_balance(N(eosio.names));
+      const asset initial_names_balance = get_balance(N(BE.names));
       BOOST_REQUIRE_EQUAL( success(),
                            bidname( "alice", "prefb", core_from_string("1.1001") ) );
       BOOST_REQUIRE_EQUAL( core_from_string( "9997.9997" ), get_balance("bob") );
       BOOST_REQUIRE_EQUAL( core_from_string( "9998.8999" ), get_balance("alice") );
-      BOOST_REQUIRE_EQUAL( initial_names_balance + core_from_string("0.1001"), get_balance(N(eosio.names)) );
+      BOOST_REQUIRE_EQUAL( initial_names_balance + core_from_string("0.1001"), get_balance(N(BE.names)) );
    }
 
    // david outbids carl on prefd
@@ -2453,7 +2453,7 @@ BOOST_FIXTURE_TEST_CASE( setparams, eosio_system_tester ) try {
          string action_type_name = msig_abi_ser.get_action_type(name);
 
          action act;
-         act.account = N(eosio.msig);
+         act.account = N(BE.msig);
          act.name = name;
          act.data = msig_abi_ser.variant_to_binary( action_type_name, data );
 
@@ -2495,7 +2495,7 @@ BOOST_FIXTURE_TEST_CASE( setparams, eosio_system_tester ) try {
    }
 
    BOOST_REQUIRE_EQUAL(success(), push_action_msig( N(alice1111111), N(propose), mvo()
-                                                    ("proposer",      "alice1111111")
+                                                    ("proposer",      "alice11111")
                                                     ("proposal_name", "setparams1")
                                                     ("trx",           trx)
                                                     ("requested", prod_perms)
@@ -2505,7 +2505,7 @@ BOOST_FIXTURE_TEST_CASE( setparams, eosio_system_tester ) try {
    // get 16 approvals
    for ( size_t i = 0; i < 15; ++i ) {
       BOOST_REQUIRE_EQUAL(success(), push_action_msig( name(producer_names[i]), N(approve), mvo()
-                                                       ("proposer",      "alice1111111")
+                                                       ("proposer",      "alice11111")
                                                        ("proposal_name", "setparams1")
                                                        ("level",         permission_level{ name(producer_names[i]), config::active_name })
                           )
@@ -2515,9 +2515,9 @@ BOOST_FIXTURE_TEST_CASE( setparams, eosio_system_tester ) try {
    transaction_trace_ptr trace;
    control->applied_transaction.connect([&]( const transaction_trace_ptr& t) { if (t->scheduled) { trace = t; } } );
    BOOST_REQUIRE_EQUAL(success(), push_action_msig( N(alice1111111), N(exec), mvo()
-                                                    ("proposer",      "alice1111111")
+                                                    ("proposer",      "alice11111")
                                                     ("proposal_name", "setparams1")
-                                                    ("executer",      "alice1111111")
+                                                    ("executer",      "alice11111")
                        )
    );
 

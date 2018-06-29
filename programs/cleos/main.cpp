@@ -316,7 +316,7 @@ void print_action( const fc::variant& at ) {
    auto console = at["console"].as_string();
 
    /*
-   if( code == "eosio" && func == "setcode" )
+   if( code == "BE" && func == "setcode" )
       args = args.substr(40)+"...";
    if( name(code) == config::system_account_name && func == "setabi" )
       args = args.substr(40)+"...";
@@ -592,7 +592,7 @@ asset to_asset( const string& code, const string& s ) {
 }
 
 inline asset to_asset( const string& s ) {
-   return to_asset( "eosio.token", s );
+   return to_asset( "BE.token", s );
 }
 
 struct set_account_permission_subcommand {
@@ -1164,7 +1164,7 @@ struct bidname_info_subcommand {
       list_producers->add_option("newname", newname_str, localized("The bidding name"))->required();
       list_producers->set_callback([this] {
          auto rawResult = call(get_table_func, fc::mutable_variant_object("json", true)
-                               ("code", "eosio")("scope", "eosio")("table", "namebids")
+                               ("code", "BE")("scope", "BE")("table", "namebids")
                                ("lower_bound", eosio::chain::string_to_name(newname_str.c_str()))("limit", 1));
          if ( print_json ) {
             std::cout << fc::json::to_pretty_string(rawResult) << std::endl;
@@ -2103,7 +2103,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
    auto setActionPermission = set_action_permission_subcommand(setAction);
 
    // Transfer subcommand
-   string con = "eosio.token";
+   string con = "BE.token";
    string sender;
    string recipient;
    string amount;
@@ -2517,7 +2517,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
       fc::to_variant(trx, trx_var);
 
       arg = fc::mutable_variant_object()
-         ("code", "eosio.msig")
+         ("code", "BE.msig")
          ("action", "propose")
          ("args", fc::mutable_variant_object()
           ("proposer", proposer )
@@ -2526,7 +2526,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
           ("trx", trx_var)
          );
       result = call(json_to_bin_func, arg);
-      send_actions({chain::action{accountPermissions, "eosio.msig", "propose", result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "BE.msig", "propose", result.get_object()["binargs"].as<bytes>()}});
    });
 
    //resolver for ABI serializer to decode actions in proposed transaction in multisig contract
@@ -2549,7 +2549,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
 
    review->set_callback([&] {
       auto result = call(get_table_func, fc::mutable_variant_object("json", true)
-                         ("code", "eosio.msig")
+                         ("code", "BE.msig")
                          ("scope", proposer)
                          ("table", "proposal")
                          ("table_key", "")
@@ -2589,7 +2589,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
          perm_var = json_from_file_or_string(perm);
       } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Fail to parse permissions JSON '${data}'", ("data",perm))
       auto arg = fc::mutable_variant_object()
-         ("code", "eosio.msig")
+         ("code", "BE.msig")
          ("action", action)
          ("args", fc::mutable_variant_object()
           ("proposer", proposer)
@@ -2598,7 +2598,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
          );
       auto result = call(json_to_bin_func, arg);
       auto accountPermissions = tx_permission.empty() ? vector<chain::permission_level>{{sender,config::active_name}} : get_account_permissions(tx_permission);
-      send_actions({chain::action{accountPermissions, "eosio.msig", action, result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "BE.msig", action, result.get_object()["binargs"].as<bytes>()}});
    };
 
    // multisig approve
@@ -2637,7 +2637,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
          canceler = name(accountPermissions.at(0).actor).to_string();
       }
       auto arg = fc::mutable_variant_object()
-         ("code", "eosio.msig")
+         ("code", "BE.msig")
          ("action", "cancel")
          ("args", fc::mutable_variant_object()
           ("proposer", proposer)
@@ -2645,7 +2645,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
           ("canceler", canceler)
          );
       auto result = call(json_to_bin_func, arg);
-      send_actions({chain::action{accountPermissions, "eosio.msig", "cancel", result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "BE.msig", "cancel", result.get_object()["binargs"].as<bytes>()}});
       }
    );
 
@@ -2670,7 +2670,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
       }
 
       auto arg = fc::mutable_variant_object()
-         ("code", "eosio.msig")
+         ("code", "BE.msig")
          ("action", "exec")
          ("args", fc::mutable_variant_object()
           ("proposer", proposer )
@@ -2679,7 +2679,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
          );
       auto result = call(json_to_bin_func, arg);
       //std::cout << "Result: " << result << std::endl;
-      send_actions({chain::action{accountPermissions, "eosio.msig", "exec", result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "BE.msig", "exec", result.get_object()["binargs"].as<bytes>()}});
       }
    );
 

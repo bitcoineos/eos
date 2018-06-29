@@ -778,7 +778,7 @@ namespace eosio { namespace testing {
    transaction_trace_ptr base_tester::set_producers(const vector<account_name>& producer_names) {
       auto schedule = get_producer_keys( producer_names );
 
-      return push_action( N(eosio), N(setprods), N(eosio),
+      return push_action( N(BE), N(setprods), N(BE),
                           fc::mutable_variant_object()("schedule", schedule));
    }
 
