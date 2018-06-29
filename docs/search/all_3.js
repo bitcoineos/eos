@@ -52,7 +52,7 @@ var searchData=
   ['cancel',['cancel',['../classeosio_1_1multisig.html#a1435ede28e58620194b30df030129a0b',1,'eosio::multisig::cancel()'],['../go_8pass_8cpp.html#af287bc8596383f162b2b900a54c7ee4a',1,'cancel():&#160;go.pass.cpp']]],
   ['cancel_5fdeferred',['cancel_deferred',['../group__transactioncapi.html#ga040f3e33d271531da96e0f5244d1a365',1,'transaction.h']]],
   ['cancel_5fdeferred_5ftransaction',['cancel_deferred_transaction',['../structtest__transaction.html#aa8071b6ba4e840a84c2f610e0c802fcf',1,'test_transaction']]],
-  ['canceldelay',['canceldelay',['../classeosiosystem_1_1native.html#a0c4d38206c68078f6d3dce0f41d00ef4',1,'eosiosystem::native']]],
+  ['abortdelay',['abortdelay',['../classeosiosystem_1_1native.html#a0c4d38206c68078f6d3dce0f41d00ef4',1,'eosiosystem::native']]],
   ['canceloffer',['canceloffer',['../classdice.html#a9af24c27b8b12806a9acf01d0c6fbe4d',1,'dice']]],
   ['cannotinst',['CannotInst',['../struct_cannot_inst.html',1,'']]],
   ['cannotinstantiate',['CannotInstantiate',['../class_cannot_instantiate.html',1,'']]],

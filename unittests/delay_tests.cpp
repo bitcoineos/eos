@@ -1747,8 +1747,8 @@ BOOST_AUTO_TEST_CASE( mindelay_test ) { try {
 
 } FC_LOG_AND_RETHROW() }/// schedule_test
 
-// test canceldelay action cancelling a delayed transaction
-BOOST_AUTO_TEST_CASE( canceldelay_test ) { try {
+// test abortdelay action cancelling a delayed transaction
+BOOST_AUTO_TEST_CASE( abortdelay_test ) { try {
    TESTER chain;
    const auto& tester_account = N(tester);
    std::vector<transaction_id_type> ids;
@@ -1899,10 +1899,10 @@ BOOST_AUTO_TEST_CASE( canceldelay_test ) { try {
    liquid_balance = get_currency_balance(chain, N(tester2));
    BOOST_REQUIRE_EQUAL(asset::from_string("0.0000 CUR"), liquid_balance);
 
-   // send canceldelay for first delayed transaction
+   // send abortdelay for first delayed transaction
    signed_transaction trx;
    trx.actions.emplace_back(vector<permission_level>{{N(tester), config::active_name}},
-                            chain::canceldelay{{N(tester), config::active_name}, ids[0]});
+                            chain::abortdelay{{N(tester), config::active_name}, ids[0]});
 
    chain.set_transaction_headers(trx);
    trx.sign(chain.get_private_key(N(tester), "active"), chain.control->get_chain_id());
@@ -1984,8 +1984,8 @@ BOOST_AUTO_TEST_CASE( canceldelay_test ) { try {
    BOOST_REQUIRE_EQUAL(asset::from_string("15.0000 CUR"), liquid_balance);
 } FC_LOG_AND_RETHROW() }
 
-// test canceldelay action under different permission levels
-BOOST_AUTO_TEST_CASE( canceldelay_test2 ) { try {
+// test abortdelay action under different permission levels
+BOOST_AUTO_TEST_CASE( abortdelay_test2 ) { try {
    TESTER chain;
 
    const auto& tester_account = N(tester);
@@ -2076,33 +2076,33 @@ BOOST_AUTO_TEST_CASE( canceldelay_test2 ) { try {
       liquid_balance = get_currency_balance(chain, N(tester2));
       BOOST_REQUIRE_EQUAL(asset::from_string("0.0000 CUR"), liquid_balance);
 
-      // attempt canceldelay with wrong canceling_auth for delayed transfer of 1.0000 CUR
+      // attempt abortdelay with wrong canceling_auth for delayed transfer of 1.0000 CUR
       {
          signed_transaction trx;
          trx.actions.emplace_back(vector<permission_level>{{N(tester), config::active_name}},
-                                  chain::canceldelay{{N(tester), config::active_name}, trx_id});
+                                  chain::abortdelay{{N(tester), config::active_name}, trx_id});
          chain.set_transaction_headers(trx);
          trx.sign(chain.get_private_key(N(tester), "active"), chain.control->get_chain_id());
          BOOST_REQUIRE_EXCEPTION( chain.push_transaction(trx), action_validate_exception,
-                                  fc_exception_message_is("canceling_auth in canceldelay action was not found as authorization in the original delayed transaction") );
+                                  fc_exception_message_is("canceling_auth in abortdelay action was not found as authorization in the original delayed transaction") );
       }
 
-      // attempt canceldelay with "second" permission for delayed transfer of 1.0000 CUR
+      // attempt abortdelay with "second" permission for delayed transfer of 1.0000 CUR
       {
          signed_transaction trx;
          trx.actions.emplace_back(vector<permission_level>{{N(tester), N(second)}},
-                                  chain::canceldelay{{N(tester), N(first)}, trx_id});
+                                  chain::abortdelay{{N(tester), N(first)}, trx_id});
          chain.set_transaction_headers(trx);
          trx.sign(chain.get_private_key(N(tester), "second"), chain.control->get_chain_id());
          BOOST_REQUIRE_THROW( chain.push_transaction(trx), irrelevant_auth_exception );
          BOOST_REQUIRE_EXCEPTION( chain.push_transaction(trx), irrelevant_auth_exception,
-                                  fc_exception_message_starts_with("canceldelay action declares irrelevant authority") );
+                                  fc_exception_message_starts_with("abortdelay action declares irrelevant authority") );
       }
 
-      // canceldelay with "active" permission for delayed transfer of 1.0000 CUR
+      // abortdelay with "active" permission for delayed transfer of 1.0000 CUR
       signed_transaction trx;
       trx.actions.emplace_back(vector<permission_level>{{N(tester), config::active_name}},
-                               chain::canceldelay{{N(tester), N(first)}, trx_id});
+                               chain::abortdelay{{N(tester), N(first)}, trx_id});
       chain.set_transaction_headers(trx);
       trx.sign(chain.get_private_key(N(tester), "active"), chain.control->get_chain_id());
       trace = chain.push_transaction(trx);
@@ -2163,10 +2163,10 @@ BOOST_AUTO_TEST_CASE( canceldelay_test2 ) { try {
       liquid_balance = get_currency_balance(chain, N(tester2));
       BOOST_REQUIRE_EQUAL(asset::from_string("0.0000 CUR"), liquid_balance);
 
-      // canceldelay with "first" permission for delayed transfer of 5.0000 CUR
+      // abortdelay with "first" permission for delayed transfer of 5.0000 CUR
       signed_transaction trx;
       trx.actions.emplace_back(vector<permission_level>{{N(tester), N(first)}},
-                               chain::canceldelay{{N(tester), N(second)}, trx_id});
+                               chain::abortdelay{{N(tester), N(second)}, trx_id});
       chain.set_transaction_headers(trx);
       trx.sign(chain.get_private_key(N(tester), "first"), chain.control->get_chain_id());
       trace = chain.push_transaction(trx);
@@ -2215,20 +2215,20 @@ BOOST_AUTO_TEST_CASE( canceldelay_test2 ) { try {
       liquid_balance = get_currency_balance(chain, N(tester2));
       BOOST_REQUIRE_EQUAL(asset::from_string("0.0000 CUR"), liquid_balance);
 
-      // attempt canceldelay with "active" permission for delayed transfer of 10.0000 CUR
+      // attempt abortdelay with "active" permission for delayed transfer of 10.0000 CUR
       {
          signed_transaction trx;
          trx.actions.emplace_back(vector<permission_level>{{N(tester), N(active)}},
-                                  chain::canceldelay{{N(tester), config::owner_name}, trx_id});
+                                  chain::abortdelay{{N(tester), config::owner_name}, trx_id});
          chain.set_transaction_headers(trx);
          trx.sign(chain.get_private_key(N(tester), "active"), chain.control->get_chain_id());
          BOOST_REQUIRE_THROW( chain.push_transaction(trx), irrelevant_auth_exception );
       }
 
-      // canceldelay with "owner" permission for delayed transfer of 10.0000 CUR
+      // abortdelay with "owner" permission for delayed transfer of 10.0000 CUR
       signed_transaction trx;
       trx.actions.emplace_back(vector<permission_level>{{N(tester), config::owner_name}},
-                               chain::canceldelay{{N(tester), config::owner_name}, trx_id});
+                               chain::abortdelay{{N(tester), config::owner_name}, trx_id});
       chain.set_transaction_headers(trx);
       trx.sign(chain.get_private_key(N(tester), "owner"), chain.control->get_chain_id());
       trace = chain.push_transaction(trx);

@@ -158,7 +158,7 @@ namespace eosio { namespace chain {
                      act_name != deleteauth::get_name() &&
                      act_name != linkauth::get_name() &&
                      act_name != unlinkauth::get_name() &&
-                     act_name != canceldelay::get_name(),
+                     act_name != abortdelay::get_name(),
                      "cannot call lookup_minimum_permission on native actions that are not allowed to be linked to minimum permissions" );
       }
 
@@ -233,8 +233,8 @@ namespace eosio { namespace chain {
                   "Cannot link eosio::linkauth to a minimum permission" );
       EOS_ASSERT( link.type != unlinkauth::get_name(),  action_validate_exception,
                   "Cannot link eosio::unlinkauth to a minimum permission" );
-      EOS_ASSERT( link.type != canceldelay::get_name(), action_validate_exception,
-                  "Cannot link eosio::canceldelay to a minimum permission" );
+      EOS_ASSERT( link.type != abortdelay::get_name(), action_validate_exception,
+                  "Cannot link eosio::abortdelay to a minimum permission" );
 
       const auto linked_permission_name = lookup_minimum_permission(link.account, link.code, link.type);
 
@@ -273,18 +273,18 @@ namespace eosio { namespace chain {
                   ("auth", auth)("min", permission_level{unlink.account, *unlinked_permission_name}) );
    }
 
-   fc::microseconds authorization_manager::check_canceldelay_authorization( const canceldelay& cancel,
+   fc::microseconds authorization_manager::check_abortdelay_authorization( const abortdelay& cancel,
                                                                             const vector<permission_level>& auths
                                                                           )const
    {
       EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
-                  "canceldelay action should only have one declared authorization" );
+                  "abortdelay action should only have one declared authorization" );
       const auto& auth = auths[0];
 
       EOS_ASSERT( get_permission(auth).satisfies( get_permission(cancel.canceling_auth),
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
-                  "canceldelay action declares irrelevant authority '${auth}'; specified authority to satisfy is ${min}",
+                  "abortdelay action declares irrelevant authority '${auth}'; specified authority to satisfy is ${min}",
                   ("auth", auth)("min", cancel.canceling_auth) );
 
       const auto& trx_id = cancel.trx_id;
@@ -309,7 +309,7 @@ namespace eosio { namespace chain {
       }
 
       EOS_ASSERT( found, action_validate_exception,
-                  "canceling_auth in canceldelay action was not found as authorization in the original delayed transaction" );
+                  "canceling_auth in abortdelay action was not found as authorization in the original delayed transaction" );
 
       return (itr->delay_until - itr->published);
    }
@@ -358,8 +358,8 @@ namespace eosio { namespace chain {
                check_linkauth_authorization( act.data_as<linkauth>(), act.authorization );
             } else if( act.name == unlinkauth::get_name() ) {
                check_unlinkauth_authorization( act.data_as<unlinkauth>(), act.authorization );
-            } else if( act.name ==  canceldelay::get_name() ) {
-               delay = std::max( delay, check_canceldelay_authorization(act.data_as<canceldelay>(), act.authorization) );
+            } else if( act.name ==  abortdelay::get_name() ) {
+               delay = std::max( delay, check_abortdelay_authorization(act.data_as<abortdelay>(), act.authorization) );
             } else {
                special_case = false;
             }

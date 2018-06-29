@@ -1316,13 +1316,13 @@ struct unregproxy_subcommand {
    }
 };
 
-struct canceldelay_subcommand {
+struct abortdelay_subcommand {
    string canceling_account;
    string canceling_permission;
    string trx_id;
 
-   canceldelay_subcommand(CLI::App* actionRoot) {
-      auto cancel_delay = actionRoot->add_subcommand("canceldelay", localized("Cancel a delayed transaction"));
+   abortdelay_subcommand(CLI::App* actionRoot) {
+      auto cancel_delay = actionRoot->add_subcommand("abortdelay", localized("Cancel a delayed transaction"));
       cancel_delay->add_option("canceling_account", canceling_account, localized("Account from authorization on the original delayed transaction"))->required();
       cancel_delay->add_option("canceling_permission", canceling_permission, localized("Permission from authorization on the original delayed transaction"))->required();
       cancel_delay->add_option("trx_id", trx_id, localized("The transaction id of the original delayed transaction"))->required();
@@ -1333,7 +1333,7 @@ struct canceldelay_subcommand {
          fc::variant act_payload = fc::mutable_variant_object()
                   ("canceling_auth", canceling_auth)
                   ("trx_id", trx_id);
-         send_actions({create_action({canceling_auth}, config::system_account_name, N(canceldelay), act_payload)});
+         send_actions({create_action({canceling_auth}, config::system_account_name, N(abortdelay), act_payload)});
       });
    }
 };
@@ -2714,7 +2714,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
    auto regProxy = regproxy_subcommand(system);
    auto unregProxy = unregproxy_subcommand(system);
 
-   auto cancelDelay = canceldelay_subcommand(system);
+   auto abortdelay = abortdelay_subcommand(system);
 
    try {
        app.parse(argc, argv);

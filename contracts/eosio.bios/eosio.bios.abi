@@ -112,7 +112,7 @@
         {"name":"type",        "type":"action_name"}
       ]
     },{
-      "name": "canceldelay",
+      "name": "abortdelay",
       "base": "",
       "fields": [
         {"name":"canceling_auth", "type":"permission_level"},
@@ -196,8 +196,8 @@
       "type": "unlinkauth",
       "ricardian_contract": ""
     },{
-      "name": "canceldelay",
-      "type": "canceldelay",
+      "name": "abortdelay",
+      "type": "abortdelay",
       "ricardian_contract": ""
     },{
       "name": "onerror",

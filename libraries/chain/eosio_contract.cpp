@@ -361,8 +361,8 @@ void apply_eosio_unlinkauth(apply_context& context) {
    db.remove(*link);
 }
 
-void apply_eosio_canceldelay(apply_context& context) {
-   auto cancel = context.act.data_as<canceldelay>();
+void apply_eosio_abortdelay(apply_context& context) {
+   auto cancel = context.act.data_as<abortdelay>();
    context.require_authorization(cancel.canceling_auth.actor); // only here to mark the single authority on this action as used
 
    const auto& trx_id = cancel.trx_id;

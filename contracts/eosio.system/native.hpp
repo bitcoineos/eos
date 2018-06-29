@@ -104,7 +104,7 @@ namespace eosiosystem {
                                  account_name code,
                                  action_name  type*/ ) {}
 
-         void canceldelay( /*permission_level canceling_auth, transaction_id_type trx_id*/ ) {}
+         void abortdelay( /*permission_level canceling_auth, transaction_id_type trx_id*/ ) {}
 
          void onerror( /*const bytes&*/ ) {}
 
