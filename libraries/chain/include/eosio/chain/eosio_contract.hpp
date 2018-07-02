@@ -15,22 +15,22 @@ namespace eosio { namespace chain {
     * @defgroup native_action_handlers Native Action Handlers
     */
    ///@{
-   void apply_eosio_newaccount(apply_context&);
-   void apply_eosio_updateauth(apply_context&);
-   void apply_eosio_deleteauth(apply_context&);
-   void apply_eosio_linkauth(apply_context&);
-   void apply_eosio_unlinkauth(apply_context&);
+   void apply_BE_newaccount(apply_context&);
+   void apply_BE_updateauth(apply_context&);
+   void apply_BE_deleteauth(apply_context&);
+   void apply_BE_linkauth(apply_context&);
+   void apply_BE_unlinkauth(apply_context&);
 
    /*
-   void apply_eosio_postrecovery(apply_context&);
-   void apply_eosio_passrecovery(apply_context&);
-   void apply_eosio_vetorecovery(apply_context&);
+   void apply_BE_postrecovery(apply_context&);
+   void apply_BE_passrecovery(apply_context&);
+   void apply_BE_vetorecovery(apply_context&);
    */
 
-   void apply_eosio_setcode(apply_context&);
-   void apply_eosio_setabi(apply_context&);
+   void apply_BE_setcode(apply_context&);
+   void apply_BE_setabi(apply_context&);
 
-   void apply_eosio_abortdelay(apply_context&);
+   void apply_BE_abortdelay(apply_context&);
    ///@}  end action handlers
 
 } } /// namespace eosio::chain
