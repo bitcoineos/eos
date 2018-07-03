@@ -85,7 +85,7 @@ namespace eosiosystem {
    /**
     *  This action will buy an exact amount of ram and bill the payer the current market price.
     */
-   void system_contract::buyrambytes( account_name payer, account_name receiver, uint32_t bytes ) {
+   void system_contract::buyramB( account_name payer, account_name receiver, uint32_t bytes ) {
       auto itr = _rammarket.find(S(4,RAMCORE));
       auto tmp = *itr;
       auto eosout = tmp.convert( asset(bytes,S(0,RAM)), CORE_SYMBOL );
@@ -284,7 +284,7 @@ namespace eosiosystem {
          bool need_deferred_trx = false;
 
 
-         // net and cpu are same sign by assertions in delegatebw and undelegatebw
+         // net and cpu are same sign by assertions in delegatebw and undelegate
          // redundant assertion also at start of changebw to protect against misuse of changebw
          bool is_undelegating = (net_balance.amount + cpu_balance.amount ) < 0;
          bool is_delegating_to_self = (!transfer && from == receiver);
@@ -392,7 +392,7 @@ namespace eosiosystem {
       changebw( from, receiver, stake_net_quantity, stake_cpu_quantity, transfer);
    } // delegatebw
 
-   void system_contract::undelegatebw( account_name from, account_name receiver,
+   void system_contract::undelegate( account_name from, account_name receiver,
                                        asset unstake_net_quantity, asset unstake_cpu_quantity )
    {
       eosio_assert( asset() <= unstake_cpu_quantity, "must unstake a positive amount" );
@@ -402,7 +402,7 @@ namespace eosiosystem {
                     "cannot undelegate bandwidth until the chain is activated (at least 15% of all tokens participate in voting)" );
 
       changebw( from, receiver, -unstake_net_quantity, -unstake_cpu_quantity, false);
-   } // undelegatebw
+   } // undelegate
 
 
    void system_contract::refund( const account_name owner ) {

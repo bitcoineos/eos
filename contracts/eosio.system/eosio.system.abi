@@ -135,7 +135,7 @@
         {"name":"sent_trx",  "type":"bytes"}
       ]
     },{
-      "name": "buyrambytes",
+      "name": "buyramB",
       "base": "",
       "fields": [
          {"name":"payer", "type":"account_name"},
@@ -168,7 +168,7 @@
          {"name":"transfer", "type":"bool"}
       ]
     },{
-      "name": "undelegatebw",
+      "name": "undelegate",
       "base": "",
       "fields": [
          {"name":"from", "type":"account_name"},
@@ -274,7 +274,7 @@
          {"name":"location",        "type":"uint16"}
       ]
     },{
-      "name": "regproducer",
+      "name": "regprod",
       "base": "",
       "fields": [
         {"name":"producer",     "type":"account_name"},
@@ -302,7 +302,7 @@
         {"name":"isproxy",   "type":"bool"}
       ]
     },{
-      "name": "voteproducer",
+      "name": "voteprod",
       "base": "",
       "fields": [
         {"name":"voter",     "type":"account_name"},
@@ -322,7 +322,7 @@
         {"name":"is_proxy",             "type":"bool"}
       ]
     },{
-      "name": "claimrewards",
+      "name": "claimreward",
       "base": "",
       "fields": [
         {"name":"owner",   "type":"account_name"}
@@ -335,7 +335,7 @@
         {"name":"is_priv",    "type":"int8"}
       ]
     },{
-      "name": "rmvproducer",
+      "name": "rmvprod",
       "base": "",
       "fields": [
         {"name":"producer", "type":"account_name"}
@@ -443,8 +443,8 @@
      "type": "onerror",
      "ricardian_contract": ""
    },{
-      "name": "buyrambytes",
-      "type": "buyrambytes",
+      "name": "buyramB",
+      "type": "buyramB",
       "ricardian_contract": ""
    },{
       "name": "buyram",
@@ -459,16 +459,16 @@
       "type": "delegatebw",
       "ricardian_contract": ""
    },{
-      "name": "undelegatebw",
-      "type": "undelegatebw",
+      "name": "undelegate",
+      "type": "undelegate",
       "ricardian_contract": ""
    },{
       "name": "refund",
       "type": "refund",
       "ricardian_contract": ""
    },{
-      "name": "regproducer",
-      "type": "regproducer",
+      "name": "regprod",
+      "type": "regprod",
       "ricardian_contract": ""
    },{
       "name": "setram",
@@ -487,20 +487,20 @@
       "type": "regproxy",
       "ricardian_contract": ""
    },{
-      "name": "voteproducer",
-      "type": "voteproducer",
+      "name": "voteprod",
+      "type": "voteprod",
       "ricardian_contract": ""
    },{
-      "name": "claimrewards",
-      "type": "claimrewards",
+      "name": "claimreward",
+      "type": "claimreward",
       "ricardian_contract": ""
    },{
       "name": "setpriv",
       "type": "setpriv",
       "ricardian_contract": ""
    },{
-      "name": "rmvproducer",
-      "type": "rmvproducer",
+      "name": "rmvprod",
+      "type": "rmvprod",
       "ricardian_contract": ""
    },{
       "name": "setalimits",

@@ -14,7 +14,7 @@ var searchData=
   ['unchecked',['unchecked',['../struct_allocator_construct_controller.html#ae6ee87d9c0624c81fbf8bcd3252397cb',1,'AllocatorConstructController']]],
   ['unconstrainedctor',['UnconstrainedCtor',['../struct_unconstrained_ctor.html#a3c91ba67ea5093bd0bbd4707ffcd1e0d',1,'UnconstrainedCtor::UnconstrainedCtor()'],['../struct_unconstrained_ctor.html#ac0010d25310b6df2fec623dfba1981a6',1,'UnconstrainedCtor::UnconstrainedCtor(T value) noexcept(noexcept(value_=value))']]],
   ['undeclare_5fno_5fpointers',['undeclare_no_pointers',['../memory_8cpp.html#ab816e5b63cf964387b12c2fb54d6aafd',1,'memory.cpp']]],
-  ['undelegatebw',['undelegatebw',['../classeosiosystem_1_1system__contract.html#aa8269cf1313fe0e2f287411ad4824706',1,'eosiosystem::system_contract']]],
+  ['undelegate',['undelegate',['../classeosiosystem_1_1system__contract.html#aa8269cf1313fe0e2f287411ad4824706',1,'eosiosystem::system_contract']]],
   ['underflow',['underflow',['../structtest.html#ab361e6ccb64d21972c45d225563f33c8',1,'test::underflow()'],['../structtest__buf.html#a07968ce7dbc1007c8fb958e085ecc72f',1,'test_buf::underflow()'],['../structtest.html#aaf1d305e764cf4bf0a89995c86271a2a',1,'test::underflow()'],['../structtestbuf.html#a7f76d04a233fa7fa83f479ccfa40b99b',1,'testbuf::underflow()'],['../structtest__buf.html#a07968ce7dbc1007c8fb958e085ecc72f',1,'test_buf::underflow()']]],
   ['unexpected',['unexpected',['../namespacestd.html#a8d17e45dddb08f328350a60872963402',1,'std']]],
   ['ungetc',['ungetc',['../musl_2upstream_2include_2stdio_8h.html#aaa45e956d4050ab6ff13699ad23f5aa6',1,'ungetc(int, FILE *):&#160;ungetc.c'],['../ungetc_8c.html#ab634a645f168154ab18a6496db140eb2',1,'ungetc(int c, FILE *f):&#160;ungetc.c']]],

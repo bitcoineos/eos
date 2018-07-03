@@ -121,7 +121,7 @@ public:
     }
 
     auto claim_rewards( name owner ) {
-       auto r = base_tester::push_action( config::system_account_name, N(claimrewards), owner, mvo()("owner",  owner ));
+       auto r = base_tester::push_action( config::system_account_name, N(claimreward), owner, mvo()("owner",  owner ));
        produce_block();
        return r;
     }
@@ -133,7 +133,7 @@ public:
     }
 
     auto register_producer(name producer) {
-       auto r = base_tester::push_action(N(BE), N(regproducer), producer, mvo()
+       auto r = base_tester::push_action(N(BE), N(regprod), producer, mvo()
                        ("producer",  name(producer))
                        ("producer_key", get_public_key( producer, "active" ) )
                        ("url", "" )
@@ -145,7 +145,7 @@ public:
 
 
     auto undelegate_bandwidth( name from, name receiver, asset net, asset cpu ) {
-       auto r = base_tester::push_action(N(BE), N(undelegatebw), from, mvo()
+       auto r = base_tester::push_action(N(BE), N(undelegate), from, mvo()
                     ("from", from )
                     ("receiver", receiver)
                     ("unstake_net_quantity", net)
@@ -249,7 +249,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         // Vote for producers
         auto votepro = [&]( account_name voter, vector<account_name> producers ) {
           std::sort( producers.begin(), producers.end() );
-          base_tester::push_action(N(BE), N(voteproducer), voter, mvo()
+          base_tester::push_action(N(BE), N(voteprod), voter, mvo()
                                 ("voter",  name(voter))
                                 ("proxy", name(0) )
                                 ("producers", producers)

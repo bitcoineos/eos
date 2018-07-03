@@ -277,7 +277,7 @@ var searchData=
   ['cit',['cit',['../struct_a.html#a2124dd425d7df03283bf9b083956ebd6',1,'A::cit()'],['../struct_a.html#a57efd43b0a163faf7b6ba20111b45183',1,'A::cit()'],['../struct_a.html#a9642d835b1a8aaa95453984db2046404',1,'A::cit()']]],
   ['claimed_5fvotes',['claimed_votes',['../structpost__record.html#ae3335d94db052f10b0295a4c7edffcca',1,'post_record']]],
   ['claimexpired',['claimexpired',['../classdice.html#a8b5a03abeb022088685abf8d43fce073',1,'dice']]],
-  ['claimrewards',['claimrewards',['../classeosiosystem_1_1system__contract.html#a783ddef35aa775b0e597fc784dc91068',1,'eosiosystem::system_contract']]],
+  ['claimreward',['claimreward',['../classeosiosystem_1_1system__contract.html#a783ddef35aa775b0e597fc784dc91068',1,'eosiosystem::system_contract']]],
   ['clamp_2ecomp_2epass_2ecpp',['clamp.comp.pass.cpp',['../clamp_8comp_8pass_8cpp.html',1,'']]],
   ['clamp_2epass_2ecpp',['clamp.pass.cpp',['../clamp_8pass_8cpp.html',1,'']]],
   ['class',['Class',['../class_class.html',1,'Class'],['../struct_poisoned_hash_detail_1_1_class.html',1,'PoisonedHashDetail::Class']]],

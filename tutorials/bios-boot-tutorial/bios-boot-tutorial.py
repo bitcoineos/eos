@@ -176,10 +176,10 @@ def createStakedAccounts(b, e):
         if unstaked:
             retry(args.cleos + 'transfer eosio %s "%s"' % (a['name'], intToCurrency(unstaked)))
 
-def regProducers(b, e):
+def regprods(b, e):
     for i in range(b, e):
         a = accounts[i]
-        retry(args.cleos + 'system regproducer ' + a['name'] + ' ' + a['pub'] + ' https://' + a['name'] + '.com' + '/' + a['pub'])
+        retry(args.cleos + 'system regprod ' + a['name'] + ' ' + a['pub'] + ' https://' + a['name'] + '.com' + '/' + a['pub'])
 
 def listProducers():
     run(args.cleos + 'system listproducers')
@@ -189,22 +189,22 @@ def vote(b, e):
         voter = accounts[i]['name']
         prods = random.sample(range(firstProducer, firstProducer + numProducers), args.num_producers_vote)
         prods = ' '.join(map(lambda x: accounts[x]['name'], prods))
-        retry(args.cleos + 'system voteproducer prods ' + voter + ' ' + prods)
+        retry(args.cleos + 'system voteprod prods ' + voter + ' ' + prods)
 
-def claimRewards():
+def claimreward():
     table = getJsonOutput(args.cleos + 'get table eosio eosio producers -l 100')
     times = []
     for row in table['rows']:
         if row['unpaid_blocks'] and not row['last_claim_time']:
-            times.append(getJsonOutput(args.cleos + 'system claimrewards -j ' + row['owner'])['processed']['elapsed'])
-    print('Elapsed time for claimrewards:', times)
+            times.append(getJsonOutput(args.cleos + 'system claimreward -j ' + row['owner'])['processed']['elapsed'])
+    print('Elapsed time for claimreward:', times)
 
 def vote(b, e):
     for i in range(b, e):
         voter = accounts[i]['name']
         prods = random.sample(range(firstProducer, firstProducer + numProducers), args.num_producers_vote)
         prods = ' '.join(map(lambda x: accounts[x]['name'], prods))
-        retry(args.cleos + 'system voteproducer prods ' + voter + ' ' + prods)
+        retry(args.cleos + 'system voteprod prods ' + voter + ' ' + prods)
 
 def proxyVotes(b, e):
     vote(firstProducer, firstProducer + 1)
@@ -213,7 +213,7 @@ def proxyVotes(b, e):
     sleep(1.0)
     for i in range(b, e):
         voter = accounts[i]['name']
-        retry(args.cleos + 'system voteproducer proxy ' + voter + ' ' + proxy)
+        retry(args.cleos + 'system voteprod proxy ' + voter + ' ' + proxy)
 
 def updateAuth(account, permission, parent, controller):
     run(args.cleos + 'push action eosio updateauth' + jsonArg({
@@ -263,7 +263,7 @@ def msigExecReplaceSystem(proposer, proposalName):
     retry(args.cleos + 'multisig exec ' + proposer + ' ' + proposalName + ' -p ' + proposer)
 
 def msigReplaceSystem():
-    run(args.cleos + 'push action eosio buyrambytes' + jsonArg(['BE', accounts[0]['name'], 200000]) + '-p eosio')
+    run(args.cleos + 'push action eosio buyramB' + jsonArg(['BE', accounts[0]['name'], 200000]) + '-p eosio')
     sleep(1)
     msigProposeReplaceSystem(accounts[0]['name'], 'fast.unstake')
     sleep(1)
@@ -304,8 +304,8 @@ def stepSetSystemContract():
     run(args.cleos + 'push action eosio setpriv' + jsonArg(['BE.msig', 1]) + '-p eosio@active')
 def stepCreateStakedAccounts():
     createStakedAccounts(0, len(accounts))
-def stepRegProducers():
-    regProducers(firstProducer, firstProducer + numProducers)
+def stepregprods():
+    regprods(firstProducer, firstProducer + numProducers)
     sleep(1)
     listProducers()
 def stepStartProducers():
@@ -341,10 +341,10 @@ commands = [
     ('t', 'tokens',         stepCreateTokens,           True,    "Create tokens"),
     ('S', 'sys-contract',   stepSetSystemContract,      True,    "Set system contract"),
     ('T', 'stake',          stepCreateStakedAccounts,   True,    "Create staked accounts"),
-    ('p', 'reg-prod',       stepRegProducers,           True,    "Register producers"),
+    ('p', 'reg-prod',       stepregprods,           True,    "Register producers"),
     ('P', 'start-prod',     stepStartProducers,         True,    "Start producers"),
     ('v', 'vote',           stepVote,                   True,    "Vote for producers"),
-    ('R', 'claim',          claimRewards,               True,    "Claim rewards"),
+    ('R', 'claim',          claimreward,               True,    "Claim rewards"),
     ('x', 'proxy',          stepProxyVotes,             True,    "Proxy votes"),
     ('q', 'resign',         stepResign,                 True,    "Resign eosio"),
     ('m', 'msg-replace',    msigReplaceSystem,          False,   "Replace system contract using msig"),

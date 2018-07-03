@@ -85,7 +85,7 @@ namespace eosiosystem {
       set_privileged( account, ispriv );
    }
 
-   void system_contract::rmvproducer( account_name producer ) {
+   void system_contract::rmvprod( account_name producer ) {
       require_auth( _self );
       auto prod = _producers.find( producer );
       eosio_assert( prod != _producers.end(), "producer not found" );
@@ -188,11 +188,11 @@ EOSIO_ABI( eosiosystem::system_contract,
      // native.hpp (newaccount definition is actually in eosio.system.cpp)
      (newaccount)(updateauth)(deleteauth)(linkauth)(unlinkauth)(abortdelay)(onerror)
      // eosio.system.cpp
-     (setram)(setparams)(setpriv)(rmvproducer)(bidname)
+     (setram)(setparams)(setpriv)(rmvprod)(bidname)
      // delegate_bandwidth.cpp
-     (buyrambytes)(buyram)(sellram)(delegatebw)(undelegatebw)(refund)
+     (buyramB)(buyram)(sellram)(delegatebw)(undelegate)(refund)
      // voting.cpp
-     (regproducer)(unregprod)(voteproducer)(regproxy)
+     (regprod)(unregprod)(voteprod)(regproxy)
      // producer_pay.cpp
-     (onblock)(claimrewards)
+     (onblock)(claimreward)
 )

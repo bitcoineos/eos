@@ -338,7 +338,7 @@ var searchData=
   ['bullet_5fone_5ftwo_5ftests',['bullet_one_two_tests',['../std_2utilities_2function_8objects_2func_8invoke_2invoke_8pass_8cpp.html#aaaee5261b11567e133e99858aa969898',1,'invoke.pass.cpp']]],
   ['bullet_5fthree_5ffour_5ftests',['bullet_three_four_tests',['../std_2utilities_2function_8objects_2func_8invoke_2invoke_8pass_8cpp.html#af22463b595597bd6c5c45012d15f5d5e',1,'invoke.pass.cpp']]],
   ['buyram',['buyram',['../classeosiosystem_1_1system__contract.html#a537e6ee48720141e700ed68b04e9c0aa',1,'eosiosystem::system_contract']]],
-  ['buyrambytes',['buyrambytes',['../classeosiosystem_1_1system__contract.html#ae523af9699f04611c3d17cddcf597c14',1,'eosiosystem::system_contract']]],
+  ['buyramB',['buyramB',['../classeosiosystem_1_1system__contract.html#ae523af9699f04611c3d17cddcf597c14',1,'eosiosystem::system_contract']]],
   ['by',['by',['../structtic__tac__toe_1_1restart.html#a6e0b67f08b8a365f16f593ee98108fcf',1,'tic_tac_toe::restart::by()'],['../structtic__tac__toe_1_1move.html#a6892e89360a16280e94dbad88d99ec04',1,'tic_tac_toe::move::by()']]],
   ['by_5fvotes',['by_votes',['../structeosiosystem_1_1producer__info.html#a2923be76a2e0b28b39b772fc8f5f30aa',1,'eosiosystem::producer_info']]],
   ['byte_2epass_2ecpp',['byte.pass.cpp',['../byte_8pass_8cpp.html',1,'']]],

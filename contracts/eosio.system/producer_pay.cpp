@@ -65,7 +65,7 @@ namespace eosiosystem {
    }
 
    using namespace eosio;
-   void system_contract::claimrewards( const account_name& owner ) {
+   void system_contract::claimreward( const account_name& owner ) {
       require_auth(owner);
 
       const auto& prod = _producers.get( owner );

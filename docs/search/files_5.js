@@ -59,7 +59,7 @@ var searchData=
   ['eosio_2esystem_2eabi_2ehpp',['eosio.system.abi.hpp',['../eosio_8system_8abi_8hpp.html',1,'']]],
   ['eosio_2esystem_2ecpp',['eosio.system.cpp',['../eosio_8system_8cpp.html',1,'']]],
   ['eosio_2esystem_2ehpp',['eosio.system.hpp',['../eosio_8system_8hpp.html',1,'']]],
-  ['eosio_2esystem_2evoteproducer_2drc_2emd',['eosio.system.voteproducer-rc.md',['../eosio_8system_8voteproducer-rc_8md.html',1,'']]],
+  ['eosio_2esystem_2evoteprod_2drc_2emd',['eosio.system.voteprod-rc.md',['../eosio_8system_8voteprod-rc_8md.html',1,'']]],
   ['eosio_2esystem_2ewast_2ehpp',['eosio.system.wast.hpp',['../eosio_8system_8wast_8hpp.html',1,'']]],
   ['eosio_2etoken_2eabi_2ehpp',['eosio.token.abi.hpp',['../eosio_8token_8abi_8hpp.html',1,'']]],
   ['eosio_2etoken_2ecpp',['eosio.token.cpp',['../eosio_8token_8cpp.html',1,'']]],

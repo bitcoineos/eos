@@ -428,9 +428,9 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, eosio_msig_tester )
 
    produce_blocks();
 
-   create_account_with_resources( N(alice1111111), N(BE), core_from_string("1.0000"), false );
-   create_account_with_resources( N(bob111111111), N(BE), core_from_string("0.4500"), false );
-   create_account_with_resources( N(carol1111111), N(BE), core_from_string("1.0000"), false );
+   create_account_with_resources( N(alice11111), N(BE), core_from_string("1.0000"), false );
+   create_account_with_resources( N(bob1111111), N(BE), core_from_string("0.4500"), false );
+   create_account_with_resources( N(carol11111), N(BE), core_from_string("1.0000"), false );
 
    BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"),
                         get_balance("BE") + get_balance("BE.ramfee") + get_balance("BE.stake") + get_balance("BE.ram") );
@@ -539,9 +539,9 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, eosio_msig_tester
 
    produce_blocks();
 
-   create_account_with_resources( N(alice1111111), N(BE), core_from_string("1.0000"), false );
-   create_account_with_resources( N(bob111111111), N(BE), core_from_string("0.4500"), false );
-   create_account_with_resources( N(carol1111111), N(BE), core_from_string("1.0000"), false );
+   create_account_with_resources( N(alice11111), N(BE), core_from_string("1.0000"), false );
+   create_account_with_resources( N(bob1111111), N(BE), core_from_string("0.4500"), false );
+   create_account_with_resources( N(carol11111), N(BE), core_from_string("1.0000"), false );
 
    BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"),
                         get_balance("BE") + get_balance("BE.ramfee") + get_balance("BE.stake") + get_balance("BE.ram") );

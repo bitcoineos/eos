@@ -169,7 +169,7 @@ namespace eosiosystem {
           *  The 'from' account loses voting power as a result of this call and
           *  all producer tallies are updated.
           */
-         void undelegatebw( account_name from, account_name receiver,
+         void undelegate( account_name from, account_name receiver,
                             asset unstake_net_quantity, asset unstake_cpu_quantity );
 
 
@@ -179,7 +179,7 @@ namespace eosiosystem {
           * tokens will be executed.
           */
          void buyram( account_name buyer, account_name receiver, asset tokens );
-         void buyrambytes( account_name buyer, account_name receiver, uint32_t bytes );
+         void buyramB( account_name buyer, account_name receiver, uint32_t bytes );
 
          /**
           *  Reduces quota my bytes and then performs an inline transfer of tokens
@@ -195,24 +195,24 @@ namespace eosiosystem {
 
          // functions defined in voting.cpp
 
-         void regproducer( const account_name producer, const public_key& producer_key, const std::string& url, uint16_t location );
+         void regprod( const account_name producer, const public_key& producer_key, const std::string& url, uint16_t location );
 
          void unregprod( const account_name producer );
 
          void setram( uint64_t max_ram_size );
 
-         void voteproducer( const account_name voter, const account_name proxy, const std::vector<account_name>& producers );
+         void voteprod( const account_name voter, const account_name proxy, const std::vector<account_name>& producers );
 
          void regproxy( const account_name proxy, bool isproxy );
 
          void setparams( const eosio::blockchain_parameters& params );
 
          // functions defined in producer_pay.cpp
-         void claimrewards( const account_name& owner );
+         void claimreward( const account_name& owner );
 
          void setpriv( account_name account, uint8_t ispriv );
 
-         void rmvproducer( account_name producer );
+         void rmvprod( account_name producer );
 
          void bidname( account_name bidder, account_name newname, asset bid );
       private:

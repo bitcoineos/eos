@@ -78,9 +78,9 @@ public:
 
       produce_blocks();
 
-      create_account_with_resources( N(alice1111111), config::system_account_name, core_from_string("1.0000"), false );
-      create_account_with_resources( N(bob111111111), config::system_account_name, core_from_string("0.4500"), false );
-      create_account_with_resources( N(carol1111111), config::system_account_name, core_from_string("1.0000"), false );
+      create_account_with_resources( N(alice11111), config::system_account_name, core_from_string("1.0000"), false );
+      create_account_with_resources( N(bob1111111), config::system_account_name, core_from_string("0.4500"), false );
+      create_account_with_resources( N(carol11111), config::system_account_name, core_from_string("1.0000"), false );
 
       BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance("BE")  + get_balance("BE.ramfee") + get_balance("BE.stake") + get_balance("BE.ram") );
    }
@@ -107,7 +107,7 @@ public:
                                    .active   = authority( get_public_key( a, "active" ) )
                                 });
 
-      trx.actions.emplace_back( get_action( config::system_account_name, N(buyrambytes), vector<permission_level>{{creator,config::active_name}},
+      trx.actions.emplace_back( get_action( config::system_account_name, N(buyramB), vector<permission_level>{{creator,config::active_name}},
                                             mvo()
                                             ("payer", creator)
                                             ("receiver", a)
@@ -215,8 +215,8 @@ public:
    action_result buyram( const account_name& payer, account_name receiver, const asset& eosin ) {
       return push_action( payer, N(buyram), mvo()( "payer",payer)("receiver",receiver)("quant",eosin) );
    }
-   action_result buyrambytes( const account_name& payer, account_name receiver, uint32_t numbytes ) {
-      return push_action( payer, N(buyrambytes), mvo()( "payer",payer)("receiver",receiver)("bytes",numbytes) );
+   action_result buyramB( const account_name& payer, account_name receiver, uint32_t numbytes ) {
+      return push_action( payer, N(buyramB), mvo()( "payer",payer)("receiver",receiver)("bytes",numbytes) );
    }
 
    action_result sellram( const account_name& account, uint64_t numbytes ) {
@@ -231,7 +231,7 @@ public:
          act.name = name;
          act.data = abi_ser.variant_to_binary( action_type_name, data );
 
-         return base_tester::push_action( std::move(act), auth ? uint64_t(signer) : signer == N(bob111111111) ? N(alice1111111) : N(bob111111111) );
+         return base_tester::push_action( std::move(act), auth ? uint64_t(signer) : signer == N(bob1111111) ? N(alice11111) : N(bob1111111) );
    }
 
    action_result stake( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
@@ -263,7 +263,7 @@ public:
    }
 
    action_result unstake( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
-      return push_action( name(from), N(undelegatebw), mvo()
+      return push_action( name(from), N(undelegate), mvo()
                           ("from",     from)
                           ("receiver", to)
                           ("unstake_net_quantity", net)
@@ -306,8 +306,8 @@ public:
          ("ram_reserve_ratio", 100 + n);
    }
 
-   action_result regproducer( const account_name& acnt, int params_fixture = 1 ) {
-      action_result r = push_action( acnt, N(regproducer), mvo()
+   action_result regprod( const account_name& acnt, int params_fixture = 1 ) {
+      action_result r = push_action( acnt, N(regprod), mvo()
                           ("producer",  acnt )
                           ("producer_key", get_public_key( acnt, "active" ) )
                           ("url", "" )
@@ -318,7 +318,7 @@ public:
    }
 
    action_result vote( const account_name& voter, const std::vector<account_name>& producers, const account_name& proxy = name(0) ) {
-      return push_action(voter, N(voteproducer), mvo()
+      return push_action(voter, N(voteprod), mvo()
                          ("voter",     voter)
                          ("proxy",     proxy)
                          ("producers", producers));
@@ -445,8 +445,8 @@ public:
 
    vector<name> active_and_vote_producers() {
       //stake more than 15% of total EOS supply to activate chain
-      transfer( "BE", "alice1111111", core_from_string("650000000.0000"), "BE" );
-      BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
+      transfer( "BE", "alice11111", core_from_string("650000000.0000"), "BE" );
+      BOOST_REQUIRE_EQUAL( success(), stake( "alice11111", "alice11111", core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
 
       // create accounts {defproducera, defproducerb, ..., defproducerz} and register as producers
       std::vector<account_name> producer_names;
@@ -459,7 +459,7 @@ public:
          setup_producer_accounts(producer_names);
          for (const auto& p: producer_names) {
 
-            BOOST_REQUIRE_EQUAL( success(), regproducer(p) );
+            BOOST_REQUIRE_EQUAL( success(), regprod(p) );
          }
       }
       produce_blocks( 250);
@@ -478,11 +478,11 @@ public:
 
       //vote for producers
       {
-         transfer( config::system_account_name, "alice1111111", core_from_string("100000000.0000"), config::system_account_name );
-         BOOST_REQUIRE_EQUAL(success(), stake( "alice1111111", core_from_string("30000000.0000"), core_from_string("30000000.0000") ) );
-         BOOST_REQUIRE_EQUAL(success(), buyram( "alice1111111", "alice1111111", core_from_string("30000000.0000") ) );
-         BOOST_REQUIRE_EQUAL(success(), push_action(N(alice1111111), N(voteproducer), mvo()
-                                                    ("voter",  "alice1111111")
+         transfer( config::system_account_name, "alice11111", core_from_string("100000000.0000"), config::system_account_name );
+         BOOST_REQUIRE_EQUAL(success(), stake( "alice11111", core_from_string("30000000.0000"), core_from_string("30000000.0000") ) );
+         BOOST_REQUIRE_EQUAL(success(), buyram( "alice11111", "alice11111", core_from_string("30000000.0000") ) );
+         BOOST_REQUIRE_EQUAL(success(), push_action(N(alice11111), N(voteprod), mvo()
+                                                    ("voter",  "alice11111")
                                                     ("proxy", name(0).to_string())
                                                     ("producers", vector<account_name>(producer_names.begin(), producer_names.begin()+21))
                              )
@@ -499,7 +499,7 @@ public:
 
    void cross_15_percent_threshold() {
       setup_producer_accounts({N(producer1111)});
-      regproducer(N(producer1111));
+      regprod(N(producer1111));
       {
          signed_transaction trx;
          set_transaction_headers(trx);
@@ -514,7 +514,7 @@ public:
                                                ("transfer", 1 )
                                              )
                                  );
-         trx.actions.emplace_back( get_action( config::system_account_name, N(voteproducer),
+         trx.actions.emplace_back( get_action( config::system_account_name, N(voteprod),
                                                vector<permission_level>{{N(producer1111), config::active_name}},
                                                mvo()
                                                ("voter", "producer1111")
@@ -522,7 +522,7 @@ public:
                                                ("producers", vector<account_name>(1, N(producer1111)))
                                              )
                                  );
-         trx.actions.emplace_back( get_action( config::system_account_name, N(undelegatebw),
+         trx.actions.emplace_back( get_action( config::system_account_name, N(undelegate),
                                                vector<permission_level>{{N(producer1111), config::active_name}},
                                                mvo()
                                                ("from", "producer1111")

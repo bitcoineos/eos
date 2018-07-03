@@ -124,7 +124,7 @@ var searchData=
   ['childrencpuusage',['ChildrenCPUUsage',['../namespacebenchmark.html#a01c6ae3e2c93cca71ef83ea29197a38f',1,'benchmark']]],
   ['chronoclocknow',['ChronoClockNow',['../namespacebenchmark.html#ae44d25ebf7f82d36152f45378daeeda8',1,'benchmark']]],
   ['claimexpired',['claimexpired',['../classdice.html#a8b5a03abeb022088685abf8d43fce073',1,'dice']]],
-  ['claimrewards',['claimrewards',['../classeosiosystem_1_1system__contract.html#a783ddef35aa775b0e597fc784dc91068',1,'eosiosystem::system_contract']]],
+  ['claimreward',['claimreward',['../classeosiosystem_1_1system__contract.html#a783ddef35aa775b0e597fc784dc91068',1,'eosiosystem::system_contract']]],
   ['classify',['classify',['../cases_8h.html#a9329f50675e1ce1cc579074b8a363ba0',1,'classify(const std::complex&lt; T &gt; &amp;x):&#160;cases.h'],['../cases_8h.html#a97b865bf6e7967235daf8672131770a4',1,'classify(double x):&#160;cases.h']]],
   ['classify_5finput_5ffile',['classify_input_file',['../namespacegbench_1_1util.html#a25ee5a7452eb3618b88659be49dc48d8',1,'gbench::util']]],
   ['clean_5frecursive',['clean_recursive',['../namespacefilesystem__dynamic__test__helper.html#a510d644bab715f51302f9b62075d708c',1,'filesystem_dynamic_test_helper']]],

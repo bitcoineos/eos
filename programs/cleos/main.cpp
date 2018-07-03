@@ -439,13 +439,13 @@ chain::action create_buyram(const name& creator, const name& newaccount, const a
                         config::system_account_name, N(buyram), act_payload);
 }
 
-chain::action create_buyrambytes(const name& creator, const name& newaccount, uint32_t numbytes) {
+chain::action create_buyramB(const name& creator, const name& newaccount, uint32_t numbytes) {
    fc::variant act_payload = fc::mutable_variant_object()
          ("payer", creator.to_string())
          ("receiver", newaccount.to_string())
          ("bytes", numbytes);
    return create_action(tx_permission.empty() ? vector<chain::permission_level>{{creator,config::active_name}} : get_account_permissions(tx_permission),
-                        config::system_account_name, N(buyrambytes), act_payload);
+                        config::system_account_name, N(buyramB), act_payload);
 }
 
 chain::action create_delegate(const name& from, const name& receiver, const asset& net, const asset& cpu, bool transfer) {
@@ -459,7 +459,7 @@ chain::action create_delegate(const name& from, const name& receiver, const asse
                         config::system_account_name, N(delegatebw), act_payload);
 }
 
-fc::variant regproducer_variant(const account_name& producer, const public_key_type& key, const string& url, uint16_t location) {
+fc::variant regprod_variant(const account_name& producer, const public_key_type& key, const string& url, uint16_t location) {
    return fc::mutable_variant_object()
             ("producer", producer)
             ("producer_key", key)
@@ -792,7 +792,7 @@ struct register_producer_subcommand {
    uint16_t loc = 0;
 
    register_producer_subcommand(CLI::App* actionRoot) {
-      auto register_producer = actionRoot->add_subcommand("regproducer", localized("Register a new producer"));
+      auto register_producer = actionRoot->add_subcommand("regprod", localized("Register a new producer"));
       register_producer->add_option("account", producer_str, localized("The account to register as a producer"))->required();
       register_producer->add_option("producer_key", producer_key_str, localized("The producer's public key"))->required();
       register_producer->add_option("url", url, localized("url where info about producer can be found"), true);
@@ -806,8 +806,8 @@ struct register_producer_subcommand {
             producer_key = public_key_type(producer_key_str);
          } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid producer public key: ${public_key}", ("public_key", producer_key_str))
 
-         auto regprod_var = regproducer_variant(producer_str, producer_key, url, loc );
-         send_actions({create_action({permission_level{producer_str,config::active_name}}, config::system_account_name, N(regproducer), regprod_var)});
+         auto regprod_var = regprod_variant(producer_str, producer_key, url, loc );
+         send_actions({create_action({permission_level{producer_str,config::active_name}}, config::system_account_name, N(regprod), regprod_var)});
       });
    }
 };
@@ -873,7 +873,7 @@ struct create_account_subcommand {
                   return;
                }
                action buyram = !buy_ram_eos.empty() ? create_buyram(creator, account_name, to_asset(buy_ram_eos))
-                  : create_buyrambytes(creator, account_name, buy_ram_bytes_in_kbytes * 1024);
+                  : create_buyramB(creator, account_name, buy_ram_bytes_in_kbytes * 1024);
                auto net = to_asset(stake_net);
                auto cpu = to_asset(stake_cpu);
                if ( net.get_amount() != 0 || cpu.get_amount() != 0 ) {
@@ -921,7 +921,7 @@ struct vote_producer_proxy_subcommand {
                   ("voter", voter_str)
                   ("proxy", proxy_str)
                   ("producers", std::vector<account_name>{});
-         send_actions({create_action({permission_level{voter_str,config::active_name}}, config::system_account_name, N(voteproducer), act_payload)});
+         send_actions({create_action({permission_level{voter_str,config::active_name}}, config::system_account_name, N(voteprod), act_payload)});
       });
    }
 };
@@ -944,7 +944,7 @@ struct vote_producers_subcommand {
                   ("voter", voter_str)
                   ("proxy", "")
                   ("producers", producer_names);
-         send_actions({create_action({permission_level{voter_str,config::active_name}}, config::system_account_name, N(voteproducer), act_payload)});
+         send_actions({create_action({permission_level{voter_str,config::active_name}}, config::system_account_name, N(voteprod), act_payload)});
       });
    }
 };
@@ -990,7 +990,7 @@ struct approve_producer_subcommand {
                ("voter", voter)
                ("proxy", "")
                ("producers", prods);
-            send_actions({create_action({permission_level{voter,config::active_name}}, config::system_account_name, N(voteproducer), act_payload)});
+            send_actions({create_action({permission_level{voter,config::active_name}}, config::system_account_name, N(voteprod), act_payload)});
       });
    }
 };
@@ -1035,7 +1035,7 @@ struct unapprove_producer_subcommand {
                ("voter", voter)
                ("proxy", "")
                ("producers", prods);
-            send_actions({create_action({permission_level{voter,config::active_name}}, config::system_account_name, N(voteproducer), act_payload)});
+            send_actions({create_action({permission_level{voter,config::active_name}}, config::system_account_name, N(voteprod), act_payload)});
       });
    }
 };
@@ -1117,7 +1117,7 @@ struct undelegate_bandwidth_subcommand {
    uint64_t unstake_storage_bytes;
 
    undelegate_bandwidth_subcommand(CLI::App* actionRoot) {
-      auto undelegate_bandwidth = actionRoot->add_subcommand("undelegatebw", localized("Undelegate bandwidth"));
+      auto undelegate_bandwidth = actionRoot->add_subcommand("undelegate", localized("Undelegate bandwidth"));
       undelegate_bandwidth->add_option("from", from_str, localized("The account undelegating bandwidth"))->required();
       undelegate_bandwidth->add_option("receiver", receiver_str, localized("The account to undelegate bandwidth from"))->required();
       undelegate_bandwidth->add_option("unstake_net_quantity", unstake_net_amount, localized("The amount of EOS to undelegate for network bandwidth"))->required();
@@ -1130,7 +1130,7 @@ struct undelegate_bandwidth_subcommand {
                   ("receiver", receiver_str)
                   ("unstake_net_quantity", to_asset(unstake_net_amount))
                   ("unstake_cpu_quantity", to_asset(unstake_cpu_amount));
-         send_actions({create_action({permission_level{from_str,config::active_name}}, config::system_account_name, N(undelegatebw), act_payload)});
+         send_actions({create_action({permission_level{from_str,config::active_name}}, config::system_account_name, N(undelegate), act_payload)});
       });
    }
 };
@@ -1266,18 +1266,18 @@ struct sellram_subcommand {
    }
 };
 
-struct claimrewards_subcommand {
+struct claimreward_subcommand {
    string owner;
 
-   claimrewards_subcommand(CLI::App* actionRoot) {
-      auto claim_rewards = actionRoot->add_subcommand("claimrewards", localized("Claim producer rewards"));
+   claimreward_subcommand(CLI::App* actionRoot) {
+      auto claim_rewards = actionRoot->add_subcommand("claimreward", localized("Claim producer rewards"));
       claim_rewards->add_option("owner", owner, localized("The account to claim rewards for"))->required();
       add_standard_transaction_options(claim_rewards);
 
       claim_rewards->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
                   ("owner", owner);
-         send_actions({create_action({permission_level{owner,config::active_name}}, config::system_account_name, N(claimrewards), act_payload)});
+         send_actions({create_action({permission_level{owner,config::active_name}}, config::system_account_name, N(claimreward), act_payload)});
       });
    }
 };
@@ -2691,12 +2691,12 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
    auto registerProducer = register_producer_subcommand(system);
    auto unregisterProducer = unregister_producer_subcommand(system);
 
-   auto voteProducer = system->add_subcommand("voteproducer", localized("Vote for a producer"));
-   voteProducer->require_subcommand();
-   auto voteProxy = vote_producer_proxy_subcommand(voteProducer);
-   auto voteProducers = vote_producers_subcommand(voteProducer);
-   auto approveProducer = approve_producer_subcommand(voteProducer);
-   auto unapproveProducer = unapprove_producer_subcommand(voteProducer);
+   auto voteprod = system->add_subcommand("voteprod", localized("Vote for a producer"));
+   voteprod->require_subcommand();
+   auto voteProxy = vote_producer_proxy_subcommand(voteprod);
+   auto voteprods = vote_producers_subcommand(voteprod);
+   auto approveProducer = approve_producer_subcommand(voteprod);
+   auto unapproveProducer = unapprove_producer_subcommand(voteprod);
 
    auto listProducers = list_producers_subcommand(system);
 
@@ -2709,7 +2709,7 @@ std::cout << localized("BTC-style address: ${key}", ("key", pk.get_public_key().
    auto biyram = buyram_subcommand(system);
    auto sellram = sellram_subcommand(system);
 
-   auto claimRewards = claimrewards_subcommand(system);
+   auto claimreward = claimreward_subcommand(system);
 
    auto regProxy = regproxy_subcommand(system);
    auto unregProxy = unregproxy_subcommand(system);

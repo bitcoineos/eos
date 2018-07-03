@@ -34,7 +34,7 @@ namespace eosiosystem {
     *  @pre authority of producer to register
     *
     */
-   void system_contract::regproducer( const account_name producer, const eosio::public_key& producer_key, const std::string& url, uint16_t location ) {
+   void system_contract::regprod( const account_name producer, const eosio::public_key& producer_key, const std::string& url, uint16_t location ) {
       eosio_assert( url.size() < 512, "url too long" );
       eosio_assert( producer_key != eosio::public_key(), "public key should not be the default value" );
       require_auth( producer );
@@ -123,7 +123,7 @@ namespace eosiosystem {
     *
     *  If voting for a proxy, the producer votes will not change until the proxy updates their own vote.
     */
-   void system_contract::voteproducer( const account_name voter_name, const account_name proxy, const std::vector<account_name>& producers ) {
+   void system_contract::voteprod( const account_name voter_name, const account_name proxy, const std::vector<account_name>& producers ) {
       require_auth( voter_name );
       update_votes( voter_name, proxy, producers, true );
    }
@@ -226,7 +226,7 @@ namespace eosiosystem {
 
    /**
     *  An account marked as a proxy can vote with the weight of other accounts which
-    *  have selected it as a proxy. Other accounts must refresh their voteproducer to
+    *  have selected it as a proxy. Other accounts must refresh their voteprod to
     *  update the proxy's weight.
     *
     *  @param isproxy - true if proxy wishes to vote on behalf of others, false otherwise
