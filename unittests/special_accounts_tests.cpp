@@ -42,12 +42,12 @@ BOOST_FIXTURE_TEST_CASE(accounts_exists, tester)
       const auto& nobody_active_authority = chain1_db.get<permission_object, by_owner>(boost::make_tuple(config::null_account_name, config::active_name));
       BOOST_CHECK_EQUAL(nobody_active_authority.auth.threshold, 1);
       BOOST_CHECK_EQUAL(nobody_active_authority.auth.accounts.size(), 0);
-      BOOST_CHECK_EQUAL(nobody_active_authority.auth.keys.size(), 0);
+      BOOST_CHECK_EQUAL(nobody_active_authority.auth.get_keys().size(), 0);
 
       const auto& nobody_owner_authority = chain1_db.get<permission_object, by_owner>(boost::make_tuple(config::null_account_name, config::owner_name));
       BOOST_CHECK_EQUAL(nobody_owner_authority.auth.threshold, 1);
       BOOST_CHECK_EQUAL(nobody_owner_authority.auth.accounts.size(), 0);
-      BOOST_CHECK_EQUAL(nobody_owner_authority.auth.keys.size(), 0);
+      BOOST_CHECK_EQUAL(nobody_owner_authority.auth.get_keys().size(), 0);
 
       auto producers = chain1_db.find<account_object, by_name>(config::producers_account_name);
       BOOST_CHECK(producers != nullptr);
@@ -58,7 +58,7 @@ BOOST_FIXTURE_TEST_CASE(accounts_exists, tester)
       auto expected_threshold = (active_producers.producers.size() * 2)/3 + 1;
       BOOST_CHECK_EQUAL(producers_active_authority.auth.threshold, expected_threshold);
       BOOST_CHECK_EQUAL(producers_active_authority.auth.accounts.size(), active_producers.producers.size());
-      BOOST_CHECK_EQUAL(producers_active_authority.auth.keys.size(), 0);
+      BOOST_CHECK_EQUAL(producers_active_authority.auth.get_keys().size(), 0);
 
       std::vector<account_name> active_auth;
       for(auto& apw : producers_active_authority.auth.accounts) {
@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(accounts_exists, tester)
       const auto& producers_owner_authority = chain1_db.get<permission_object, by_owner>(boost::make_tuple(config::producers_account_name, config::owner_name));
       BOOST_CHECK_EQUAL(producers_owner_authority.auth.threshold, 1);
       BOOST_CHECK_EQUAL(producers_owner_authority.auth.accounts.size(), 0);
-      BOOST_CHECK_EQUAL(producers_owner_authority.auth.keys.size(), 0);
+      BOOST_CHECK_EQUAL(producers_owner_authority.auth.get_keys().size(), 0);
 
       //TODO: Add checks on the other permissions of the producers account
 

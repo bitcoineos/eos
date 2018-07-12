@@ -190,7 +190,8 @@ namespace detail {
             detail::meta_permission_set permissions;
 
             permissions.insert(authority.waits.begin(), authority.waits.end());
-            permissions.insert(authority.keys.begin(), authority.keys.end());
+            vector<key_weight> keys = authority.get_keys();
+            permissions.insert(keys.begin(), keys.end());
             permissions.insert(authority.accounts.begin(), authority.accounts.end());
 
             // Check all permissions, from highest weight to lowest, seeing if provided authorization factors satisfies them or not

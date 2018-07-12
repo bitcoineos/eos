@@ -89,23 +89,30 @@ struct authority {
    friend bool operator != ( const authority& lhs, const authority& rhs ) {
       return tie( lhs.threshold, lhs.keys, lhs.accounts, lhs.waits ) != tie( rhs.threshold, rhs.keys, rhs.accounts, rhs.waits );
    }
+   
+   vector<key_weight> get_keys() const {
+       return keys;
+   }
 };
 
 
 struct shared_authority {
    shared_authority( chainbase::allocator<char> alloc )
-   :keys(alloc),accounts(alloc),waits(alloc){}
+   :packed_keys(alloc),accounts(alloc),waits(alloc){}
 
    shared_authority& operator=(const authority& a) {
       threshold = a.threshold;
-      keys = decltype(keys)(a.keys.begin(), a.keys.end(), keys.get_allocator());
+        auto keyssize = fc::raw::pack_size( a.keys );
+        packed_keys.resize( keyssize );
+        fc::datastream<char*> ds( packed_keys.data(), keyssize );
+        fc::raw::pack( ds, a.keys );
       accounts = decltype(accounts)(a.accounts.begin(), a.accounts.end(), accounts.get_allocator());
       waits = decltype(waits)(a.waits.begin(), a.waits.end(), waits.get_allocator());
       return *this;
    }
 
    uint32_t                                   threshold = 0;
-   shared_vector<key_weight>                  keys;
+   shared_string                  packed_keys;
    shared_vector<permission_level_weight>     accounts;
    shared_vector<wait_weight>                 waits;
 
@@ -113,19 +120,28 @@ struct shared_authority {
    authority to_authority()const {
       authority auth;
       auth.threshold = threshold;
-      auth.keys.reserve(keys.size());
+         fc::datastream<const char*> ds( packed_keys.data(), packed_keys.size() );
+         fc::raw::unpack( ds, auth.keys );
       auth.accounts.reserve(accounts.size());
       auth.waits.reserve(waits.size());
-      for( const auto& k : keys ) { auth.keys.emplace_back( k ); }
       for( const auto& a : accounts ) { auth.accounts.emplace_back( a ); }
       for( const auto& w : waits ) { auth.waits.emplace_back( w ); }
       return auth;
    }
 
+   vector<key_weight> get_keys() const {
+       vector<key_weight> keys;
+       fc::datastream<const char*> ds( packed_keys.data(), packed_keys.size() );
+       fc::raw::unpack( ds, keys );
+       return keys;
+   }
    size_t get_billable_size() const {
       size_t accounts_size = accounts.size() * config::billable_size_v<permission_level_weight>;
       size_t waits_size = waits.size() * config::billable_size_v<wait_weight>;
       size_t keys_size = 0;
+       vector<key_weight> keys;
+       fc::datastream<const char*> ds( packed_keys.data(), packed_keys.size() );
+       fc::raw::unpack( ds, keys );
       for (const auto& k: keys) {
          keys_size += config::billable_size_v<key_weight>;
          keys_size += fc::raw::pack_size(k.key);  ///< serialized size of the key
@@ -200,4 +216,4 @@ FC_REFLECT(eosio::chain::permission_level_weight, (permission)(weight) )
 FC_REFLECT(eosio::chain::key_weight, (key)(weight) )
 FC_REFLECT(eosio::chain::wait_weight, (wait_sec)(weight) )
 FC_REFLECT(eosio::chain::authority, (threshold)(keys)(accounts)(waits) )
-FC_REFLECT(eosio::chain::shared_authority, (threshold)(keys)(accounts)(waits) )
+FC_REFLECT(eosio::chain::shared_authority, (threshold)(packed_keys)(accounts)(waits) )
